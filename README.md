@@ -1,3 +1,2 @@
-Automated-Software-Validation
-based on Slide app
-https://github.com/ccrama/Slide
+# Automated-Software-Validation
+Based on Slide app: https://github.com/ccrama/Slide
