@@ -1,0 +1,738 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/activity_background"
+    android:orientation="vertical">
+
+    <include layout="@layout/settings_toolbar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                    android:id="@+id/card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:orientation="vertical"
+                    android:layout_margin="4dp">
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Body2"
+                    android:id="@+id/displayHeader"
+                    android:text="@string/display"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingTop="16dp"
+                    android:layout_width="match_parent"
+                    android:textColor="?attr/colorAccent"
+                    android:layout_height="wrap_content" />
+
+                <LinearLayout
+                        android:id="@+id/view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?android:selectableItemBackground"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/settings_layout_view"
+                            android:textColor="?attr/fontColor"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/view_current"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:alpha=".86"
+                            android:textColor="?attr/fontColor"
+                            android:textSize="13sp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.25dp"
+                    android:alpha=".25"
+                    android:background="?attr/tintColor" />
+
+                <LinearLayout
+                        android:id="@+id/picture"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?android:selectableItemBackground"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/settings_layout_picture_mode"
+                            android:textColor="?attr/fontColor"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/picture_current"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:alpha=".86"
+                            android:textColor="?attr/fontColor"
+                            android:textSize="13sp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.25dp"
+                    android:alpha=".25"
+                    android:background="?attr/tintColor" />
+
+                <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?android:selectableItemBackground"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="16dp">
+
+                    <LinearLayout
+                            android:layout_marginEnd="64dp"
+                            android:layout_marginRight="64dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/mode_big_thumbnails"
+                            android:textColor="?attr/fontColor"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/bigThumbnails"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:backgroundTint="?attr/tintColor"
+                        android:button="@null"
+                        android:buttonTint="?attr/tintColor"
+                        android:hapticFeedbackEnabled="true"
+                        android:textColor="?attr/fontColor"
+                        android:textColorHint="?attr/fontColor" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.25dp"
+                    android:alpha=".25"
+                    android:background="?attr/tintColor" />
+
+                <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:background="?android:selectableItemBackground"
+                        android:textColor="?attr/colorAccent"
+                        android:padding="16dp">
+
+                    <LinearLayout
+                            android:layout_marginEnd="64dp"
+                            android:layout_marginRight="64dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/settings_comment_hide_selftext_image"
+                            android:textColor="?attr/fontColor"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/selftextcomment"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:backgroundTint="?attr/tintColor"
+                        android:button="@null"
+                        android:buttonTint="?attr/tintColor"
+                        android:hapticFeedbackEnabled="true"
+                        android:textColor="?attr/fontColor"
+                        android:textColorHint="?attr/fontColor" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.25dp"
+                    android:alpha=".25"
+                    android:background="?attr/tintColor" />
+
+                <LinearLayout
+                        android:id="@+id/actionbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?android:selectableItemBackground"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/settings_layout_actionbar_mode"
+                            android:textColor="?attr/fontColor"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/actionbar_current"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:alpha=".86"
+                            android:textColor="?attr/fontColor"
+                            android:textSize="13sp" />
+                </LinearLayout>
+
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Body2"
+                    android:id="@+id/postInfoHeader"
+                    android:text="@string/post_info"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingTop="16dp"
+                    android:layout_width="match_parent"
+                    android:textColor="?attr/colorAccent"
+                    android:layout_height="wrap_content" />
+
+                <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?android:selectableItemBackground"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="16dp">
+
+                    <LinearLayout
+                            android:layout_marginEnd="64dp"
+                            android:layout_marginRight="64dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/settings_card_show_selftext"
+                            android:textColor="?attr/fontColor"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/selftext"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:backgroundTint="?attr/tintColor"
+                        android:button="@null"
+                        android:buttonTint="?attr/tintColor"
+                        android:hapticFeedbackEnabled="true"
+                        android:textColor="?attr/fontColor"
+                        android:textColorHint="?attr/fontColor" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.25dp"
+                    android:alpha=".25"
+                    android:background="?attr/tintColor" />
+                <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?android:selectableItemBackground"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="16dp">
+
+                    <LinearLayout
+                            android:layout_marginEnd="64dp"
+                            android:layout_marginRight="64dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:orientation="vertical">
+
+                        <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/setting_titleTop"
+                                android:textColor="?attr/fontColor"
+                                android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <androidx.appcompat.widget.SwitchCompat
+                            android:id="@+id/titleTop"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:backgroundTint="?attr/tintColor"
+                            android:button="@null"
+                            android:buttonTint="?attr/tintColor"
+                            android:hapticFeedbackEnabled="true"
+                            android:textColor="?attr/fontColor"
+                            android:textColorHint="?attr/fontColor" />
+                </RelativeLayout>
+
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.25dp"
+                        android:alpha=".25"
+                        android:background="?attr/tintColor" />
+                <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?android:selectableItemBackground"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="16dp">
+
+                    <LinearLayout
+                            android:layout_marginEnd="64dp"
+                            android:layout_marginRight="64dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/settings_layout_small_content_tag"
+                            android:textColor="?attr/fontColor"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/tagsetting"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:backgroundTint="?attr/tintColor"
+                        android:button="@null"
+                        android:buttonTint="?attr/tintColor"
+                        android:hapticFeedbackEnabled="true"
+                        android:textColor="?attr/fontColor"
+                        android:textColorHint="?attr/fontColor" />
+                </RelativeLayout>
+
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.25dp"
+                        android:alpha=".25"
+                        android:background="?attr/tintColor" />
+
+
+
+                <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?android:selectableItemBackground"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="16dp">
+
+                    <LinearLayout
+                            android:layout_marginEnd="64dp"
+                            android:layout_marginRight="64dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/settings_layout_show_domain"
+                            android:textColor="?attr/fontColor"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/domain"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:backgroundTint="?attr/tintColor"
+                        android:button="@null"
+                        android:buttonTint="?attr/tintColor"
+                        android:hapticFeedbackEnabled="true"
+                        android:textColor="?attr/fontColor"
+                        android:textColorHint="?attr/fontColor" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:background="?attr/tintColor"
+                    android:alpha=".25"
+                    android:layout_height="0.25dp"/>
+
+                <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?android:selectableItemBackground"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="16dp">
+
+                    <LinearLayout
+                            android:layout_marginEnd="64dp"
+                            android:layout_marginRight="64dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/settings_layout_show_content_type"
+                            android:textColor="?attr/fontColor"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/contenttype"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:backgroundTint="?attr/tintColor"
+                        android:button="@null"
+                        android:buttonTint="?attr/tintColor"
+                        android:hapticFeedbackEnabled="true"
+                        android:textColor="?attr/fontColor"
+                        android:textColorHint="?attr/fontColor" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.25dp"
+                    android:alpha=".25"
+                    android:background="?attr/tintColor" />
+
+                <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?android:selectableItemBackground"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="16dp">
+
+                    <LinearLayout
+                            android:layout_marginEnd="64dp"
+                            android:layout_marginRight="64dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/settings_layout_show_votes_comments"
+                            android:textColor="?attr/fontColor"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/votes"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:backgroundTint="?attr/tintColor"
+                        android:button="@null"
+                        android:buttonTint="?attr/tintColor"
+                        android:hapticFeedbackEnabled="true"
+                        android:textColor="?attr/fontColor"
+                        android:textColorHint="?attr/fontColor" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.25dp"
+                    android:alpha=".25"
+                    android:background="?attr/tintColor" />
+
+                <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?android:selectableItemBackground"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="16dp">
+
+                    <LinearLayout
+                            android:layout_marginEnd="64dp"
+                            android:layout_marginRight="64dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/card_right_thumb"
+                            android:textColor="?attr/fontColor"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/action"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:backgroundTint="?attr/tintColor"
+                        android:button="@null"
+                        android:buttonTint="?attr/tintColor"
+                        android:hapticFeedbackEnabled="true"
+                        android:textColor="?attr/fontColor"
+                        android:textColorHint="?attr/fontColor" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.25dp"
+                    android:alpha=".25"
+                    android:background="?attr/tintColor" />
+
+                <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:background="?android:selectableItemBackground"
+                        android:padding="16dp">
+
+                    <LinearLayout
+                            android:layout_marginEnd="64dp"
+                            android:layout_marginRight="64dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/settings_general_comment_last_visit"
+                            android:textColor="?attr/fontColor"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/commentlast"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:backgroundTint="?attr/tintColor"
+                        android:button="@null"
+                        android:buttonTint="?attr/tintColor"
+                        android:hapticFeedbackEnabled="true"
+                        android:textColor="?attr/fontColor"
+                        android:textColorHint="?attr/fontColor" />
+                </RelativeLayout>
+
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.25dp"
+                        android:alpha=".25"
+                        android:background="?attr/tintColor" />
+
+                <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:background="?android:selectableItemBackground"
+                        android:padding="16dp">
+
+                    <LinearLayout
+                            android:layout_marginEnd="64dp"
+                            android:layout_marginRight="64dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:orientation="vertical">
+
+                        <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/settings_abbreviate_post_scores"
+                                android:textColor="?attr/fontColor"
+                                android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <androidx.appcompat.widget.SwitchCompat
+                            android:id="@+id/abbreviateScores"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:backgroundTint="?attr/tintColor"
+                            android:button="@null"
+                            android:buttonTint="?attr/tintColor"
+                            android:hapticFeedbackEnabled="true"
+                            android:textColor="?attr/fontColor"
+                            android:textColorHint="?attr/fontColor" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.25dp"
+                    android:alpha=".25"
+                    android:background="?attr/tintColor" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:background="?android:selectableItemBackground"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_marginEnd="64dp"
+                        android:layout_marginRight="64dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/settings_hide_post_awards"
+                            android:textColor="?attr/fontColor"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/hidePostAwards"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:backgroundTint="?attr/tintColor"
+                        android:button="@null"
+                        android:buttonTint="?attr/tintColor"
+                        android:hapticFeedbackEnabled="true"
+                        android:textColor="?attr/fontColor"
+                        android:textColorHint="?attr/fontColor" />
+                </RelativeLayout>
+
+
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Body2"
+                    android:id="@+id/postButtonsHeader"
+                    android:text="@string/post_buttons"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingTop="16dp"
+                    android:layout_width="match_parent"
+                    android:textColor="?attr/colorAccent"
+                    android:layout_height="wrap_content" />
+
+                <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?android:selectableItemBackground"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="16dp">
+
+                    <LinearLayout
+                            android:layout_marginEnd="64dp"
+                            android:layout_marginRight="64dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/card_hide_post_button"
+                            android:textColor="?attr/fontColor"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <androidx.appcompat.widget.AppCompatCheckBox
+                        android:id="@+id/hidebutton"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="?android:selectableItemBackground"
+                        android:backgroundTint="?attr/tintColor"
+                        android:button="@null"
+                        android:buttonTint="?attr/tintColor"
+                        android:drawableRight="?android:attr/listChoiceIndicatorMultiple"
+                        android:hapticFeedbackEnabled="true"
+                        android:textColor="?attr/fontColor"
+                        android:textColorHint="?attr/fontColor" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.25dp"
+                    android:alpha=".25"
+                    android:background="?attr/tintColor" />
+
+                <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?android:selectableItemBackground"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="16dp">
+
+                    <LinearLayout
+                            android:layout_marginEnd="64dp"
+                            android:layout_marginRight="64dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/card_save_button"
+                            android:textColor="?attr/fontColor"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <androidx.appcompat.widget.AppCompatCheckBox
+                        android:id="@+id/savebutton"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="?android:selectableItemBackground"
+                        android:backgroundTint="?attr/tintColor"
+                        android:button="@null"
+                        android:buttonTint="?attr/tintColor"
+                        android:drawableRight="?android:attr/listChoiceIndicatorMultiple"
+                        android:hapticFeedbackEnabled="true"
+                        android:textColor="?attr/fontColor"
+                        android:textColorHint="?attr/fontColor" />
+                </RelativeLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

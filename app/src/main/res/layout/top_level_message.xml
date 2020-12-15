@@ -1,0 +1,86 @@
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/top"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    android:background="#424242"
+    android:clipChildren="false"
+    android:orientation="vertical"
+    android:scrollbars="none"
+    app:cardBackgroundColor="?attr/card_background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:selectableItemBackground"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <me.ccrama.redditslide.Views.TitleTextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="[DEV] For the past few weeks I have been working on developing my first app that is completely open source, I would like to share my progress with you today. Meet Munch For Reddit!"
+            android:textColor="?attr/fontColor"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:id="@+id/background"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="0dp"
+            android:scrollbars="none">
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="6dp"
+                android:paddingTop="2dp"
+                android:text="4 hours ago"
+                android:textColor="?attr/fontColor"
+                android:textSize="?attr/font_commentinfo" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="6dp"
+                android:paddingTop="2dp"
+                android:text="@string/submission_properties_seperator"
+                android:textColor="?attr/fontColor"
+                android:textSize="?attr/font_commentinfo" />
+
+            <TextView
+                android:id="@+id/user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="6dp"
+                android:paddingTop="2dp"
+                android:text="ccrama"
+                android:textColor="?attr/fontColor"
+                android:textSize="?attr/font_commentinfo" />
+        </LinearLayout>
+
+        <me.ccrama.redditslide.SpoilerRobotoTextView
+            android:id="@+id/content"
+            android:paddingBottom="4dp"
+            android:text="This is some test content."
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="?attr/fontColor"
+            android:textSize="?attr/font_commentbody" />
+
+        <me.ccrama.redditslide.Views.CommentOverflow
+            android:id="@+id/commentOverflow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:visibility="invisible" />
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

@@ -1,0 +1,99 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/background"
+    android:layout_width="match_parent"
+    android:layout_marginTop="0.25dp"
+    android:layout_height="wrap_content">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="?attr/activity_background"
+        android:orientation="horizontal" />
+
+    <View
+        android:id="@+id/next"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginBottom="2dp"
+        android:background="?attr/activity_background"
+        android:orientation="horizontal" />
+
+    <View
+        android:id="@+id/dot"
+        android:layout_width="3dp"
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@+id/menuarea"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" />
+
+    <ImageView
+            android:layout_width="30dp"
+            android:id="@+id/flair"
+            android:layout_marginStart="8dp"
+            android:layout_toRightOf="@+id/dot"
+            android:layout_height="30dp"/>
+    <TextView
+        android:id="@+id/content"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginStart="8dp"
+        android:layout_toRightOf="@+id/flair"
+        android:layout_alignBaseline="@+id/flair"
+        android:layout_marginTop="6dp"
+        android:paddingRight="30dp"
+        android:layout_marginBottom="6dp"
+        android:fontFamily="sans-serif-condensed"
+        android:gravity="center_vertical"
+        android:textColor="?attr/fontColor"
+        android:textSize="?attr/font_commentinfo" />
+
+    <TextView
+        android:id="@+id/commentnumber"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_height="16dp"
+        android:background="@drawable/commentback"
+        android:paddingStart="2.5dp"
+        android:layout_toRightOf="@+id/content"
+        android:paddingEnd="2.5dp"
+        android:layout_marginStart="-30dp"
+        android:textColor="#fff"
+        android:layout_marginEnd="6dp"
+        android:layout_marginTop="6dp"
+        android:textSize="10sp"
+        android:textStyle="bold"/>
+
+    <me.ccrama.redditslide.SpoilerRobotoTextView
+        android:id="@+id/firstTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/content"
+        android:paddingLeft="10dp"
+        android:layout_marginStart="-2dp"
+        android:layout_marginEnd="-2dp"
+        android:paddingRight="10dp"
+        android:layout_toRightOf="@id/dot"
+        android:textColor="?attr/fontColor"
+        android:textSize="?attr/font_commentbody" />
+
+    <me.ccrama.redditslide.Views.CommentOverflow
+        android:id="@+id/commentOverflow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/firstTextView"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_toRightOf="@id/dot"
+        android:orientation="vertical"
+        android:visibility="invisible" />
+
+    <LinearLayout
+        android:id="@+id/menuarea"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/commentOverflow"
+        android:orientation="vertical" />
+</RelativeLayout>
+
