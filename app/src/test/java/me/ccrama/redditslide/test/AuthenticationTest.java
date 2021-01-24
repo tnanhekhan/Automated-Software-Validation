@@ -31,13 +31,13 @@ public class AuthenticationTest {
 
     @Test
     public void doVerify() {
-        //arrange
+        // arrange
         Context mockedContext = mock(Context.class);
         RedditClient mockedRedditClient = mock(RedditClient.class);
         SharedPreferences mockedSharedPreferences = mock(SharedPreferences.class);
         OAuthHelper oAuthHelper = mock(OAuthHelper.class);
         SharedPreferences.Editor mockedEditor = mock(SharedPreferences.Editor.class);
-        String lastToken = "token";
+        final String lastToken = "token";
 
         Whitebox.setInternalState(BuildConfig.class, "DEBUG", false);
         Whitebox.setInternalState(Authentication.class, "authentication", mockedSharedPreferences);
@@ -48,10 +48,15 @@ public class AuthenticationTest {
         when(mockedSharedPreferences.edit()).thenReturn(mockedEditor);
         doNothing().when(mockedEditor).apply();
 
-        //act
+        // act
         Authentication.doVerify(lastToken, mockedRedditClient, true, mockedContext);
 
-        //assert/verify
+        // assert/verify
+        // CORRECT (E | Existence & C | Conformance) -
+        // Here we check if there is someone logged in.
+        // In this test is it only necessary to check if you are able to login,
+        // because of this it is not needed to verify particularly WHO is logged in.
+        // Conformance isn't relevant in this case because of this
         verify(mockedRedditClient).authenticate(any());
     }
 }

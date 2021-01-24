@@ -75,7 +75,7 @@ public class UserSubscriptionsTest {
 
         // assert
         // CORRECT (E | Existence) - We check if "result" returns something that can be empty/not empty (an array)
-        // CORRECT (C | Conformance) - We check if the array that is returned contains atleast 1 element
+        // CORRECT (C | Conformance) - We check if the array that is returned contains at least 1 element
         assert (!result.isEmpty());
     }
 
