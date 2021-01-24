@@ -19,7 +19,6 @@ import me.ccrama.redditslide.UserSubscriptions;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -57,8 +56,10 @@ public class UserSubscriptionsTest {
 
     @Test
     public void getAllSubreddits() {
+        // arrange
         Context mockedContext = mock(Context.class);
         SharedPreferences mockedSharedPreferences = mock(SharedPreferences.class);
+
         UserSubscriptions.pinned = new TestUtils.MockPreferences("pinned,pinned2");
 
         PowerMockito.mockStatic(UserSubscriptions.class);
@@ -67,16 +68,23 @@ public class UserSubscriptionsTest {
         BDDMockito.given(UserSubscriptions.getHistory()).willReturn(subreddits);
         BDDMockito.given(UserSubscriptions.getDefaults(mockedContext)).willReturn(subreddits);
         BDDMockito.given(UserSubscriptions.getSubscriptions(mockedContext)).willReturn(subreddits);
-
         BDDMockito.given(UserSubscriptions.getAllSubreddits(mockedContext)).willCallRealMethod();
+
+        // act
         CaseInsensitiveArrayList result = UserSubscriptions.getAllSubreddits(mockedContext);
+
+        // assert
+        // CORRECT (E | Existence) - We check if "result" returns something that can be empty/not empty (an array)
+        // CORRECT (C | Conformance) - We check if the array that is returned contains atleast 1 element
         assert (!result.isEmpty());
     }
 
     @Test(expected = NullPointerException.class)
     public void getAllSubredditsWithMissingDependencies() {
+        // arrange
         Context mockedContext = mock(Context.class);
         SharedPreferences mockedSharedPreferences = mock(SharedPreferences.class);
+
         UserSubscriptions.pinned = new TestUtils.MockPreferences("pinned,pinned2");
 
         PowerMockito.mockStatic(UserSubscriptions.class);
@@ -84,7 +92,13 @@ public class UserSubscriptionsTest {
         when(mockedContext.getSharedPreferences(anyString(), anyInt())).thenReturn(mockedSharedPreferences);
 
         BDDMockito.given(UserSubscriptions.getAllSubreddits(mockedContext)).willCallRealMethod();
+
+        // act
         CaseInsensitiveArrayList result = UserSubscriptions.getAllSubreddits(mockedContext);
+
+        // assert
+        // CORRECT (E | Existence) - We check if "result" returns something that can be empty/not empty (an array)
+        // CORRECT (C | Conformance) - We check if the array that is returned contains atleast 1 element
         assert (!result.isEmpty());
     }
 }
