@@ -43,6 +43,7 @@ public class SubmissionComments {
     public ArrayList<CommentObject> comments;
     public HashMap<String, String> commentOPs = new HashMap<>();
     public Submission submission;
+    public List<Submission> posts;
     private String context;
     private CommentSort defaultSorting = CommentSort.CONFIDENCE;
     private CommentAdapter adapter;

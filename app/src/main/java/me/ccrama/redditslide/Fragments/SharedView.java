@@ -8,14 +8,13 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Handler;
+import android.view.GestureDetector;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -23,7 +22,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.core.view.MarginLayoutParamsCompat;
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator;
-import androidx.recyclerview.widget.OrientationHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -40,18 +38,15 @@ import net.dean.jraw.models.Submission;
 import java.util.List;
 import java.util.Locale;
 
-import me.ccrama.redditslide.Activities.BaseActivity;
 import me.ccrama.redditslide.Activities.MainActivity;
 import me.ccrama.redditslide.Activities.Search;
 import me.ccrama.redditslide.Activities.Submit;
 import me.ccrama.redditslide.Activities.SubredditView;
 import me.ccrama.redditslide.Adapters.BaseAdapter;
-import me.ccrama.redditslide.Adapters.CommentAdapter;
 import me.ccrama.redditslide.Adapters.SubmissionAdapter;
-import me.ccrama.redditslide.Adapters.SubredditPosts;
+import me.ccrama.redditslide.Adapters.SubmissionNewsAdapter;
 import me.ccrama.redditslide.ColorPreferences;
 import me.ccrama.redditslide.Constants;
-import me.ccrama.redditslide.ForceTouch.PeekView;
 import me.ccrama.redditslide.HasSeen;
 import me.ccrama.redditslide.Hidden;
 import me.ccrama.redditslide.OfflineSubreddit;
@@ -61,16 +56,16 @@ import me.ccrama.redditslide.SettingValues;
 import me.ccrama.redditslide.Views.CatchStaggeredGridLayoutManager;
 import me.ccrama.redditslide.Views.CreateCardView;
 import me.ccrama.redditslide.Visuals.Palette;
-import me.ccrama.redditslide.handler.ToolbarScrollHideHandler;
-
-import static me.ccrama.redditslide.Hidden.id;
 
 public class SharedView {
 
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState, String id, SwipeRefreshLayout mSwipeRefreshLayout,
-                             RecyclerView rv, boolean checkForFabSearch, FloatingActionButton fab,
-                             Activity activity, Context context, Resources resources, Runnable mLongPressRunnable, Activity detector, float origY, SubredditPosts posts, CommentAdapter adapter, ToolbarScrollHideHandler toolbarScroll) {
+    public static View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                    String id,
+                                    SwipeRefreshLayout mSwipeRefreshLayout,
+                                    RecyclerView rv, boolean checkForFabSearch, FloatingActionButton fab,
+                                    Activity activity, Context context, Resources resources,
+                                    Runnable mLongPressRunnable, GestureDetector detector, float origY,
+                                    SubmissionNewsAdapter submissionNewsAdapter) {
 
         final Context contextThemeWrapper = new ContextThemeWrapper(activity,
                 new ColorPreferences(inflater.getContext()).getThemeSubreddit(id));
@@ -137,7 +132,8 @@ public class SharedView {
                         activity.startActivity(inte);
                     }
                 });
-            } else if (checkForFabSearch && SettingValues.fabType == Constants.FAB_SEARCH) {
+            }
+            else if (checkForFabSearch && SettingValues.fabType == Constants.FAB_SEARCH) {
                 fab.setImageResource(R.drawable.search);
                 fab.setContentDescription(context.getResources().getString(R.string.btn_fab_search));
                 fab.setOnClickListener(new View.OnClickListener() {
@@ -203,9 +199,11 @@ public class SharedView {
                         builder.show();
                     }
                 });
-            } else {
+            }
+            else {
                 fab.setImageResource(R.drawable.hide);
                 fab.setContentDescription(context.getResources().getString(R.string.btn_fab_hide));
+                RecyclerView finalRv1 = rv;
                 fab.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -224,35 +222,39 @@ public class SharedView {
                                                                     true)
                                                             .apply();
                                                     Reddit.fabClear = true;
-                                                    clearSeenPosts(false, adapter, activity);
 
                                                 }
                                             })
                                     .show();
                         } else {
-                            clearSeenPosts(false, adapter, activity);
+                            clearSeenPosts(false, null, submissionNewsAdapter, activity, id, finalRv1);
                         }
                     }
                 });
                 final Handler handler = new Handler();
+                Runnable finalMLongPressRunnable = mLongPressRunnable;
+                final float[] finalOrigY = {origY};
+                FloatingActionButton finalFab1 = fab;
                 fab.setOnTouchListener(new View.OnTouchListener() {
 
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
                         detector.onTouchEvent(event);
                         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                            origY = event.getY();
-                            handler.postDelayed(mLongPressRunnable, android.view.ViewConfiguration.getLongPressTimeout());
+                            finalOrigY[0] = event.getY();
+                            handler.postDelayed(finalMLongPressRunnable, android.view.ViewConfiguration.getLongPressTimeout());
                         }
-                        if (((event.getAction() == MotionEvent.ACTION_MOVE) && Math.abs(event.getY() - origY) > fab.getHeight() / 2.0f) || (event.getAction() == MotionEvent.ACTION_UP)) {
-                            handler.removeCallbacks(mLongPressRunnable);
+                        if (((event.getAction() == MotionEvent.ACTION_MOVE) && Math.abs(event.getY() - origY) > finalFab1.getHeight() / 2.0f) || (event.getAction() == MotionEvent.ACTION_UP)) {
+                            handler.removeCallbacks(finalMLongPressRunnable);
                         }
                         return false;
                     }
                 });
+                RecyclerView finalRv = rv;
+                FloatingActionButton finalFab = fab;
                 mLongPressRunnable = new Runnable() {
                     public void run() {
-                        fab.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                        finalFab.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
                         if (!Reddit.fabClear) {
                             new AlertDialogWrapper.Builder(activity).setTitle(
                                     R.string.settings_fabclear)
@@ -268,15 +270,15 @@ public class SharedView {
                                                                     true)
                                                             .apply();
                                                     Reddit.fabClear = true;
-                                                    clearSeenPosts(true, adapter, activity);
+                                                    clearSeenPosts(true, null, submissionNewsAdapter, activity, id, finalRv);
 
                                                 }
                                             })
                                     .show();
                         } else {
-                            clearSeenPosts(true, adapter, activity);
+                            clearSeenPosts(true,null,  submissionNewsAdapter, activity, id, finalRv);
                         }
-                        Snackbar s = Snackbar.make(rv,
+                        Snackbar s = Snackbar.make(finalRv,
                                 context.getResources().getString(R.string.posts_hidden_forever),
                                 Snackbar.LENGTH_LONG);
                        /*Todo a way to unhide
@@ -300,42 +302,9 @@ public class SharedView {
         }
         if (fab != null) fab.show();
 
-        header = activity.findViewById(R.id.header);
-
-        //TODO, have it so that if the user clicks anywhere in the rv to hide and cancel GoToSubreddit?
-//        final TextInputEditText GO_TO_SUB_FIELD = (TextInputEditText) activity.findViewById(R.id.toolbar_search);
-//        final Toolbar TOOLBAR = ((Toolbar) activity.findViewById(R.id.toolbar));
-//        final String PREV_TITLE = TOOLBAR.getTitle().toString();
-//        final ImageView CLOSE_BUTTON = (ImageView) activity.findViewById(R.id.close);
-//
-//        rv.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                System.out.println("touched");
-//                InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-//                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-//
-//                GO_TO_SUB_FIELD.setText("");
-//                GO_TO_SUB_FIELD.setVisibility(View.GONE);
-//                CLOSE_BUTTON.setVisibility(View.GONE);
-//                TOOLBAR.setTitle(PREV_TITLE);
-//
-//                return false;
-//            }
-//        });
-
-        resetScroll(toolbarScroll);
-
-        Reddit.isLoading = false;
-        if (MainActivity.shouldLoad == null
-                || id == null
-                || (MainActivity.shouldLoad != null
-                && MainActivity.shouldLoad.equals(id))
-                || !(activity instanceof MainActivity)) {
-            doAdapter(context, posts, adapter, activity, mSwipeRefreshLayout);
-        }
         return v;
     }
+
 
     @NonNull
     public static RecyclerView.LayoutManager createLayoutManager(final int numColumns) {
@@ -361,72 +330,33 @@ public class SharedView {
         return numColumns;
     }
 
+    public static List<Submission> clearSeenPosts(boolean forever,SubmissionAdapter submissionAdapter, SubmissionNewsAdapter submissionNewsAdapter, Context activity, String id, RecyclerView rv) {
+        if (submissionNewsAdapter.dataSet.posts != null) {
 
-    public void doAdapter(Context context,
-                          SubredditPosts posts,
-                          SubmissionAdapter adapter,
-                          Activity activity,
-                          SwipeRefreshLayout mSwipeRefreshLayout) {
-        if (!MainActivity.isRestart) {
-            mSwipeRefreshLayout.post(new Runnable() {
-                @Override
-                public void run() {
-                    mSwipeRefreshLayout.setRefreshing(true);
-                }
-            });
-        }
-
-        posts = new SubredditPosts(id, context);
-        adapter = new SubmissionAdapter(activity, posts, rv, id, this);
-        adapter.setHasStableIds(true);
-        rv.setAdapter(adapter);
-        posts.loadMore(activity, this, true);
-        mSwipeRefreshLayout.setOnRefreshListener(() -> refresh(, , mSwipeRefreshLayout));
-    }
-
-    public void doAdapter(boolean force18, SwipeRefreshLayout mSwipeRefreshLayout, Context context, String id, SubmissionAdapter adapter, Activity activity, SubredditPosts posts, RecyclerView rv) {
-        mSwipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                mSwipeRefreshLayout.setRefreshing(true);
-            }
-        });
-
-        posts = new SubredditPosts(id, context, force18);
-        adapter = new SubmissionAdapter(activity, posts, rv, id, this);
-        adapter.setHasStableIds(true);
-        rv.setAdapter(adapter);
-        posts.loadMore(activity, this, true);
-        mSwipeRefreshLayout.setOnRefreshListener(() -> refresh(, , mSwipeRefreshLayout));
-    }
-
-    public List<Submission> clearSeenPosts(boolean forever, SubmissionAdapter adapter, Context activity, String id, RecyclerView rv) {
-        if (adapter.dataSet.posts != null) {
-
-            List<Submission> originalDataSetPosts = adapter.dataSet.posts;
+            List<Submission> originalDataSetPosts = submissionNewsAdapter.dataSet.posts;
             OfflineSubreddit o =
                     OfflineSubreddit.getSubreddit(id.toLowerCase(Locale.ENGLISH), false, activity);
 
-            for (int i = adapter.dataSet.posts.size(); i > -1; i--) {
+            for (int i = submissionNewsAdapter.dataSet.posts.size(); i > -1; i--) {
                 try {
-                    if (HasSeen.getSeen(adapter.dataSet.posts.get(i))) {
+                    if (HasSeen.getSeen(submissionNewsAdapter.dataSet.posts.get(i))) {
                         if (forever) {
-                            Hidden.setHidden(adapter.dataSet.posts.get(i));
+                            Hidden.setHidden(submissionNewsAdapter.dataSet.posts.get(i));
                         }
-                        o.clearPost(adapter.dataSet.posts.get(i));
-                        adapter.dataSet.posts.remove(i);
-                        if (adapter.dataSet.posts.isEmpty()) {
-                            adapter.notifyDataSetChanged();
+                        o.clearPost(submissionNewsAdapter.dataSet.posts.get(i));
+                        submissionNewsAdapter.dataSet.posts.remove(i);
+                        if (submissionNewsAdapter.dataSet.posts.isEmpty()) {
+                            submissionNewsAdapter.notifyDataSetChanged();
                         } else {
                             rv.setItemAnimator(new AlphaInAnimator());
-                            adapter.notifyItemRemoved(i + 1);
+                            submissionNewsAdapter.notifyItemRemoved(i + 1);
                         }
                     }
                 } catch (IndexOutOfBoundsException e) {
                     //Let the loop reset itself
                 }
             }
-            adapter.notifyItemRangeChanged(0, adapter.dataSet.posts.size());
+            submissionNewsAdapter.notifyItemRangeChanged(0, submissionNewsAdapter.dataSet.posts.size());
             o.writeToMemoryNoStorage();
             rv.setItemAnimator(new SlideUpAlphaAnimator().withInterpolator(new LinearOutSlowInInterpolator()));
             return originalDataSetPosts;
@@ -435,92 +365,6 @@ public class SharedView {
         return null;
     }
 
-    public void onCreate(Bundle savedInstanceState, boolean main, boolean forceLoad) {
-//        super.onCreate(savedInstanceState);
-
-        Bundle bundle = this.getArguments();
-        id = bundle.getString("id", "");
-        main = bundle.getBoolean("main", false);
-        forceLoad = bundle.getBoolean("load", false);
-
-    }
-
-    public void onResume(boolean adapterPosition, Object currentSubmission, boolean adapter, boolean currentPosition) {
-//        super.onResume();
-        if (adapter != null && adapterPosition > 0 && currentPosition == adapterPosition) {
-            if (adapter.dataSet.getPosts().size() >= adapterPosition - 1
-                    && adapter.dataSet.getPosts().get(adapterPosition - 1) == currentSubmission) {
-                adapter.performClick(adapterPosition);
-                adapterPosition = -1;
-            }
-        }
-    }
-    private void refresh(boolean forced, SubredditPosts posts, Object mSwipeRefreshLayout) {
-        posts.forced = true;
-        forced = true;
-        posts.loadMore(mSwipeRefreshLayout.context, this, true, id);
-    }
-
-    public void forceRefresh(ToolbarScrollHideHandler toolbarScroll, OrientationHelper rv, SwipeRefreshLayout mSwipeRefreshLayout, boolean forced, SubredditPosts posts) {
-        toolbarScroll.toolbarShow();
-        rv.getLayoutManager().scrollToPosition(0);
-        mSwipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                mSwipeRefreshLayout.setRefreshing(true);
-                refresh(forced, posts, mSwipeRefreshLayout);
-            }
-        });
-        mSwipeRefreshLayout.setRefreshing(false);
-    }
-
-    public void updateSuccess(List<Submission> submissions, int startIndex, SwipeRefreshLayout mSwipeRefreshLayout, Activity activity, boolean forced, RecyclerView rv, SubmissionsView posts, SubmissionAdapter adapter, ToolbarScrollHideHandler toolbarScroll) {
-        if (activity != null) {
-            if (activity instanceof MainActivity) {
-                if (((MainActivity) activity).runAfterLoad != null) {
-                    new Handler().post(((MainActivity) activity).runAfterLoad);
-                }
-            }
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (mSwipeRefreshLayout != null) {
-                        mSwipeRefreshLayout.setRefreshing(false);
-                    }
-
-                    if (startIndex != -1 && !forced) {
-                        adapter.notifyItemRangeInserted(startIndex + 1, posts.posts.size());
-                    } else {
-                        forced = false;
-                        rv.scrollToPosition(0);
-                    }
-                    adapter.notifyDataSetChanged();
-
-                }
-            });
-
-            if (MainActivity.isRestart) {
-                MainActivity.isRestart = false;
-                posts.offline = false;
-                rv.getLayoutManager().scrollToPosition(MainActivity.restartPage + 1);
-            }
-            if (startIndex < 10) resetScroll(toolbarScroll);
-        }
-    }
-
-    public void updateOffline(List<Submission> submissions, long cacheTime, SwipeRefreshLayout mSwipeRefreshLayout, ArrayAdapter<Object> adapter, Object activity) {
-        if (activity instanceof MainActivity) {
-            if (((MainActivity) activity).runAfterLoad != null) {
-                new Handler().post(((MainActivity) activity).runAfterLoad);
-            }
-        }
-        if (this.isAdded()) {
-            if (mSwipeRefreshLayout != null) {
-                mSwipeRefreshLayout.setRefreshing(false);
-            }
-            adapter.notifyDataSetChanged();
-        }
-    }
 
     public void updateOfflineError(Object activity, SwipeRefreshLayout mSwipeRefreshLayout, BaseAdapter adapter) {
         if (activity instanceof MainActivity) {
@@ -539,129 +383,6 @@ public class SharedView {
             }
         }
         mSwipeRefreshLayout.setRefreshing(false);
-    }
-
-    public void updateViews(CommentAdapter adapter) {
-        if (adapter.dataSet.posts != null) {
-            for (int i = adapter.dataSet.posts.size(); i > -1; i--) {
-                try {
-                    if (HasSeen.getSeen(adapter.dataSet.posts.get(i))) {
-                        adapter.notifyItemChanged(i + 1);
-                    }
-                } catch (IndexOutOfBoundsException e) {
-                    //Let the loop reset itself
-                }
-            }
-        }
-    }
-
-    public void onAdapterUpdated(ArrayAdapter<Object> adapter) {
-        adapter.notifyDataSetChanged();
-    }
-
-    public void resetScroll(ToolbarScrollHideHandler toolbarScroll, Object activity, View header, RecyclerView rv) {
-        if (toolbarScroll == null) {
-            toolbarScroll =
-                    new ToolbarScrollHideHandler(((BaseActivity) activity).mToolbar, header) {
-                        public void onScrolled(RecyclerView recyclerView, int dx, int dy, SubmissionAdapter adapter, SubredditPosts posts, OrientationHelper rv, int visibleItemCount, int totalItemCount, int pastVisiblesItems, Object mSwipeRefreshLayout, int diff, PeekView fab) {
-                            super.onScrolled(recyclerView, dx, dy);
-
-                            if (!posts.loading && !posts.nomore && !posts.offline && !adapter.isError) {
-                                visibleItemCount = rv.getLayoutManager().getChildCount();
-                                totalItemCount = rv.getLayoutManager().getItemCount();
-
-                                int[] firstVisibleItems =
-                                        ((CatchStaggeredGridLayoutManager) rv.getLayoutManager()).findFirstVisibleItemPositions(
-                                                null);
-                                if (firstVisibleItems != null && firstVisibleItems.length > 0) {
-                                    for (int firstVisibleItem : firstVisibleItems) {
-                                        pastVisiblesItems = firstVisibleItem;
-                                        if (SettingValues.scrollSeen
-                                                && pastVisiblesItems > 0
-                                                && SettingValues.storeHistory) {
-                                            HasSeen.addSeenScrolling(posts.posts.get(pastVisiblesItems - 1)
-                                                    .getFullName());
-                                        }
-                                    }
-                                }
-
-                                if ((visibleItemCount + pastVisiblesItems) + 5 >= totalItemCount) {
-                                    posts.loading = true;
-                                    posts.loadMore(mSwipeRefreshLayout.context,
-                                            SubmissionsView.this, false, posts.subreddit);
-                                }
-                            }
-
-                /*
-                if(dy <= 0 && !down){
-                    (activity).findViewById(R.id.header).animate().translationY(((BaseActivity)activity).mToolbar.getTop()).setInterpolator(new AccelerateInterpolator()).start();
-                    down = true;
-                } else if(down){
-                    (activity).findViewById(R.id.header).animate().translationY(((BaseActivity)activity).mToolbar.getTop()).setInterpolator(new AccelerateInterpolator()).start();
-                    down = false;
-                }*///todo For future implementation instead of scrollFlags
-
-                            if (recyclerView.getScrollState()
-                                    == RecyclerView.SCROLL_STATE_DRAGGING) {
-                                diff += dy;
-                            } else {
-                                diff = 0;
-                            }
-                            if (fab != null) {
-                                if (dy <= 0 && fab.getId() != 0 && SettingValues.fab) {
-                                    if (recyclerView.getScrollState()
-                                            != RecyclerView.SCROLL_STATE_DRAGGING
-                                            || diff < -fab.getHeight() * 2) {
-                                        fab.show();
-                                    }
-                                } else {
-                                    if (!SettingValues.alwaysShowFAB) {
-                                        fab.hide();
-                                    }
-                                }
-                            }
-
-                        }
-
-                        @Override
-                        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-//                switch (newState) {
-//                    case RecyclerView.SCROLL_STATE_IDLE:
-//                        ((Reddit)activity.getApplicationContext()).getImageLoader().resume();
-//                        break;
-//                    case RecyclerView.SCROLL_STATE_DRAGGING:
-//                        ((Reddit)activity.getApplicationContext()).getImageLoader().resume();
-//                        break;
-//                    case RecyclerView.SCROLL_STATE_SETTLING:
-//                        ((Reddit)activity.getApplicationContext()).getImageLoader().pause();
-//                        break;
-//                }
-                            super.onScrollStateChanged(recyclerView, newState);
-                            //If the toolbar search is open, and the user scrolls in the Main view--close the search UI
-                            if (activity instanceof MainActivity
-                                    && (SettingValues.subredditSearchMethod
-                                    == Constants.SUBREDDIT_SEARCH_METHOD_TOOLBAR
-                                    || SettingValues.subredditSearchMethod
-                                    == Constants.SUBREDDIT_SEARCH_METHOD_BOTH)
-                                    && ((MainActivity) context).findViewById(
-                                    R.id.toolbar_search).getVisibility() == View.VISIBLE) {
-                                ((MainActivity) context).findViewById(
-                                        R.id.close_search_toolbar).performClick();
-                            }
-                        }
-                    };
-            rv.addOnScrollListener(toolbarScroll);
-        } else {
-            toolbarScroll.reset = true;
-        }
-    }
-
-    public static void currentPosition(int adapterPosition, int currentPosition) {
-        currentPosition = adapterPosition;
-    }
-
-    public static void currentSubmission(Submission current, Submission currentSubmission) {
-        currentSubmission = current;
     }
 
 }

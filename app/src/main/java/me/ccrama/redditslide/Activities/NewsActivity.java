@@ -43,7 +43,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import me.ccrama.redditslide.Adapters.SubredditPostsRealm;
+import me.ccrama.redditslide.Adapters.SubredditPosts;
 import me.ccrama.redditslide.Authentication;
 import me.ccrama.redditslide.CaseInsensitiveArrayList;
 import me.ccrama.redditslide.ColorPreferences;
@@ -561,10 +561,10 @@ public class NewsActivity extends BaseActivity
                     mTabLayout.setSelectedTabIndicatorColor(
                             new ColorPreferences(NewsActivity.this).getColor(selectedSub));
                     if (page != null && page.adapter != null) {
-                        SubredditPostsRealm p = page.adapter.dataSet;
-                        if (p.offline) {
-                            p.doNewsActivityOffline(NewsActivity.this, p.displayer);
-                        }
+                        SubredditPosts p = page.adapter.dataSet;
+//                        if (p.offline) {
+//                            p.doNewsActivityOffline(NewsActivity.this, p.displayer);
+//                        }
                     }
                 }
 

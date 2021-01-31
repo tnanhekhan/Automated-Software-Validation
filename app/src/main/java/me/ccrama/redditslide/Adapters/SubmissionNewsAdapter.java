@@ -49,14 +49,14 @@ public class SubmissionNewsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     public final  String              subreddit;
     public        Activity            context;
     private final boolean             custom;
-    public        SubredditPostsRealm dataSet;
+    public        SubredditPosts dataSet;
     public        List<Submission>    seen;
     private final int LOADING_SPINNER = 5;
     private final int NO_MORE         = 3;
     private final int SPACER          = 6;
     SubmissionDisplay displayer;
 
-    public SubmissionNewsAdapter(Activity context, SubredditPostsRealm dataSet,
+    public SubmissionNewsAdapter(Activity context, SubredditPosts dataSet,
             RecyclerView listView, String subreddit, SubmissionDisplay displayer) {
         this.subreddit = subreddit.toLowerCase(Locale.ENGLISH);
         this.listView = listView;
