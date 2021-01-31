@@ -40,8 +40,8 @@ import me.ccrama.redditslide.util.LogUtil;
  */
 public class SettingsBackup extends BaseActivityAnim {
     MaterialDialog progress;
-    String         title;
-    File           file;
+    String title;
+    File file;
 
     public static void close(Closeable stream) {
         try {
@@ -72,11 +72,18 @@ public class SettingsBackup extends BaseActivityAnim {
                 StringWriter fw = new StringWriter();
                 try {
                     InputStream is = getContentResolver().openInputStream(fileUri);
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-                    int c = reader.read();
-                    while (c != -1) {
-                        fw.write(c);
-                        c = reader.read();
+                    BufferedReader reader = null;
+                    try {
+                        reader = new BufferedReader(new InputStreamReader(is));
+                        int c = reader.read();
+                        while (c != -1) {
+                            fw.write(c);
+                            c = reader.read();
+                        }
+                    } catch (Exception e) {
+                        System.out.println(e);
+                    } finally {
+                        reader.close();
                     }
                     String read = fw.toString();
 
@@ -101,14 +108,18 @@ public class SettingsBackup extends BaseActivityAnim {
                                     + File.separator
                                     + t);
                             Log.v(LogUtil.getTag(), "WRITING TO " + newF.getAbsolutePath());
+                            FileWriter newfw = null;
+                            BufferedWriter bw = null;
                             try {
-                                FileWriter newfw = new FileWriter(newF);
-                                BufferedWriter bw = new BufferedWriter(newfw);
+                                newfw = new FileWriter(newF);
+                                bw = new BufferedWriter(newfw);
                                 bw.write(innerFile);
-                                bw.close();
                                 progress.setProgress(progress.getCurrentProgress() + 1);
                             } catch (IOException e) {
                                 e.printStackTrace();
+                            } finally {
+                                newfw.close();
+                                bw.close();
                             }
 
                         }

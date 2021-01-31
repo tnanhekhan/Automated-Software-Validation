@@ -12,7 +12,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Looper;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -252,27 +251,40 @@ public class GifUtils {
 
                             if (audioUri != null) {
                                 LogUtil.v("Downloading DASH audio from: " + audioUri);
-                                DataSourceInputStream audioInputStream = new DataSourceInputStream(
-                                        cacheDataSourceFactory.createDataSource(), new DataSpec(audioUri));
-                                if (save) {
-                                    FileUtils.copyInputStreamToFile(audioInputStream,
-                                            new File(a.getCacheDir().getAbsolutePath(), "audio.mp4"));
-                                } else {
-                                    IOUtils.copy(audioInputStream, NullOutputStream.NULL_OUTPUT_STREAM);
+                                DataSourceInputStream audioInputStream = null;
+                                try {
+                                    audioInputStream = new DataSourceInputStream(
+                                            cacheDataSourceFactory.createDataSource(), new DataSpec(audioUri));
+                                    if (save) {
+                                        FileUtils.copyInputStreamToFile(audioInputStream,
+                                                new File(a.getCacheDir().getAbsolutePath(), "audio.mp4"));
+                                    } else {
+                                        IOUtils.copy(audioInputStream, NullOutputStream.NULL_OUTPUT_STREAM);
+                                    }
+                                } catch (Exception e) {
+                                    System.out.println(e);
+                                } finally {
+                                    audioInputStream.close();
                                 }
-                                audioInputStream.close();
                             }
                             if (videoUri != null) {
                                 LogUtil.v("Downloading DASH video from: " + videoUri);
-                                DataSourceInputStream videoInputStream = new DataSourceInputStream(
-                                        cacheDataSourceFactory.createDataSource(), new DataSpec(videoUri));
-                                if (save) {
-                                    FileUtils.copyInputStreamToFile(videoInputStream,
-                                            new File(a.getCacheDir().getAbsolutePath(), "video.mp4"));
-                                } else {
-                                    IOUtils.copy(videoInputStream, NullOutputStream.NULL_OUTPUT_STREAM);
+                                DataSourceInputStream videoInputStream = null;
+                                try {
+                                    videoInputStream = new DataSourceInputStream(
+                                            cacheDataSourceFactory.createDataSource(), new DataSpec(videoUri));
+                                    if (save) {
+                                        FileUtils.copyInputStreamToFile(videoInputStream,
+                                                new File(a.getCacheDir().getAbsolutePath(), "video.mp4"));
+                                    } else {
+                                        IOUtils.copy(videoInputStream, NullOutputStream.NULL_OUTPUT_STREAM);
+                                    }
+
+                                } catch (Exception e) {
+                                    System.out.println(e);
+                                } finally {
+                                    videoInputStream.close();
                                 }
-                                videoInputStream.close();
                             }
 
                             if (!save) {
@@ -356,8 +368,8 @@ public class GifUtils {
         private TextView size;
 
         public AsyncLoadGif(@NotNull Activity c, @NotNull ExoVideoView video,
-                @Nullable ProgressBar p, @Nullable View placeholder, @Nullable Runnable gifSave,
-                boolean closeIfNull, boolean autostart, String subreddit) {
+                            @Nullable ProgressBar p, @Nullable View placeholder, @Nullable Runnable gifSave,
+                            boolean closeIfNull, boolean autostart, String subreddit) {
             this.c = c;
             this.subreddit = subreddit;
             this.video = video;
@@ -369,8 +381,8 @@ public class GifUtils {
         }
 
         public AsyncLoadGif(@NotNull Activity c, @NotNull ExoVideoView video,
-                @Nullable ProgressBar p, @Nullable View placeholder, @Nullable Runnable gifSave,
-                boolean closeIfNull, boolean autostart, TextView size, String subreddit) {
+                            @Nullable ProgressBar p, @Nullable View placeholder, @Nullable Runnable gifSave,
+                            boolean closeIfNull, boolean autostart, TextView size, String subreddit) {
             this.c = c;
             this.video = video;
             this.subreddit = subreddit;
@@ -387,8 +399,8 @@ public class GifUtils {
         }
 
         public AsyncLoadGif(@NotNull Activity c, @NotNull ExoVideoView video,
-                @Nullable ProgressBar p, @Nullable View placeholder, @NotNull boolean closeIfNull,
-                boolean autostart, String subreddit) {
+                            @Nullable ProgressBar p, @Nullable View placeholder, @NotNull boolean closeIfNull,
+                            boolean autostart, String subreddit) {
             this.c = c;
             this.video = video;
             this.subreddit = subreddit;
@@ -474,30 +486,30 @@ public class GifUtils {
             return VideoType.OTHER;
         }
 
-      /**
-       * Get an API response for a given host and gfy name
-       *
-       * @param host the host to send the req to
-       * @param name the name of the gfy
-       * @return the result
-       */
-        JsonObject getApiResponse(String host, String name){
-          String gfycatUrl = "https://api." + host + ".com/v1/gfycats" + name;
-          return HttpUtil.getJsonObject(client, gson, gfycatUrl);
+        /**
+         * Get an API response for a given host and gfy name
+         *
+         * @param host the host to send the req to
+         * @param name the name of the gfy
+         * @return the result
+         */
+        JsonObject getApiResponse(String host, String name) {
+            String gfycatUrl = "https://api." + host + ".com/v1/gfycats" + name;
+            return HttpUtil.getJsonObject(client, gson, gfycatUrl);
         }
 
-       /**
-        * Get the correct mp4/mobile url from a given result JsonObject
-        *
-        * @param result the result to check
-        * @return the video url
-        */
-        String getUrlFromApi(JsonObject result){
-          if (result.getAsJsonObject("gfyItem").has("mobileUrl")) {
-            return result.getAsJsonObject("gfyItem").get("mobileUrl").getAsString();
-          } else {
-            return result.getAsJsonObject("gfyItem").get("mp4Url").getAsString();
-          }
+        /**
+         * Get the correct mp4/mobile url from a given result JsonObject
+         *
+         * @param result the result to check
+         * @return the video url
+         */
+        String getUrlFromApi(JsonObject result) {
+            if (result.getAsJsonObject("gfyItem").has("mobileUrl")) {
+                return result.getAsJsonObject("gfyItem").get("mobileUrl").getAsString();
+            } else {
+                return result.getAsJsonObject("gfyItem").get("mp4Url").getAsString();
+            }
         }
 
 
@@ -534,7 +546,7 @@ public class GifUtils {
                         HttpURLConnection ucon = (HttpURLConnection) newUrl.openConnection();
                         ucon.setInstanceFollowRedirects(false);
                         String secondURL = new URL(ucon.getHeaderField("location")).toString();
-                        if (secondURL.contains("gifdeliverynetwork")){
+                        if (secondURL.contains("gifdeliverynetwork")) {
                             return Uri.parse(getUrlFromApi(getApiResponse("redgifs", name)));
                         }
 
@@ -556,7 +568,7 @@ public class GifUtils {
                                                 new DialogInterface.OnClickListener() {
                                                     @Override
                                                     public void onClick(DialogInterface dialog,
-                                                            int which) {
+                                                                        int which) {
                                                         c.finish();
                                                     }
                                                 })
@@ -678,7 +690,7 @@ public class GifUtils {
                     //Check if resolved gfycat link is gifdeliverynetwork. If it is gifdeliverynetwork, open the link externally
                     try {
                         Uri uri = loadGfycat(name, url, gson);
-                        if(uri.toString().contains("gifdeliverynetwork")){
+                        if (uri.toString().contains("gifdeliverynetwork")) {
                             openWebsite(url);
                             return null;
                         } else return uri;
@@ -933,7 +945,7 @@ public class GifUtils {
          */
         static String readableFileSize(long size) {
             if (size <= 0) return "0";
-            final String[] units = new String[] { "B", "kB", "MB", "GB", "TB" };
+            final String[] units = new String[]{"B", "kB", "MB", "GB", "TB"};
             int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
             return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups))
                     + " "
@@ -949,7 +961,7 @@ public class GifUtils {
          * @param c        Activity
          */
         static void getRemoteFileSize(String url, OkHttpClient client,
-                final TextView sizeText, Activity c) {
+                                      final TextView sizeText, Activity c) {
             if (!url.contains("v.redd.it")) {
                 Request request = new Request.Builder().url(url).head().build();
                 Response response;
@@ -1026,7 +1038,7 @@ public class GifUtils {
             }
         }
 
-        private void openWebsite(String url){
+        private void openWebsite(String url) {
             if (closeIfNull) {
                 Intent web = new Intent(c, Website.class);
                 web.putExtra(LinkUtil.EXTRA_URL, url);
@@ -1047,7 +1059,7 @@ public class GifUtils {
      * @param isIndeterminate True to show an indeterminate ProgressBar, false otherwise
      */
     private static void showProgressBar(final Activity activity, final ProgressBar progressBar,
-            final boolean isIndeterminate) {
+                                        final boolean isIndeterminate) {
         if (activity == null) return;
         if (Looper.myLooper() == Looper.getMainLooper()) {
             // Current Thread is Main Thread.

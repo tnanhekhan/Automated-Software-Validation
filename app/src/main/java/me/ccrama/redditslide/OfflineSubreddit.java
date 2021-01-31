@@ -29,12 +29,12 @@ import java.util.Map;
  */
 public class OfflineSubreddit {
 
-    public static  Long   currentid                 = 0L;
+    public static Long currentid = 0L;
     private static String savedSubmissionsSubreddit = "";
-    public long                  time;
+    public long time;
     public ArrayList<Submission> submissions;
-    public String                subreddit;
-    public boolean               base;
+    public String subreddit;
+    public boolean base;
 
     public static void writeSubmission(JsonNode node, Submission s, Context c) {
         writeSubmissionToStorage(s, node, c);
@@ -61,13 +61,20 @@ public class OfflineSubreddit {
 
     public static void writeSubmissionToStorage(Submission s, JsonNode node, Context c) {
         File toStore = new File(getCacheDirectory(c) + File.separator + s.getFullName());
+        FileWriter writer = null;
+
         try {
-            FileWriter writer = new FileWriter(toStore);
+            writer = new FileWriter(toStore);
             writer.append(node.toString());
-            writer.flush();
-            writer.close();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                writer.flush();
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -190,7 +197,7 @@ public class OfflineSubreddit {
     private static HashMap<String, OfflineSubreddit> cache;
 
     public static OfflineSubreddit getSubreddit(String subreddit, Long time, boolean offline,
-            Context c) {
+                                                Context c) {
         if (cache == null) cache = new HashMap<>();
         String title;
         if (subreddit != null) {
@@ -246,7 +253,7 @@ public class OfflineSubreddit {
     }
 
     public static Submission getSubmissionFromStorage(String fullName, Context c, boolean offline,
-            ObjectReader reader) throws IOException {
+                                                      ObjectReader reader) {
         String gotten = getStringFromFile(fullName, c);
         if (!gotten.isEmpty()) {
             if (gotten.startsWith("[") && offline) {
@@ -265,14 +272,20 @@ public class OfflineSubreddit {
     public static String getStringFromFile(String name, Context c) {
         File f = new File(getCacheDirectory(c) + File.separator + name);
         if (f.exists()) {
+            BufferedReader reader = null;
             try {
-                BufferedReader reader = new BufferedReader(new FileReader(f));
+                reader = new BufferedReader(new FileReader(f));
                 char[] chars = new char[(int) f.length()];
                 reader.read(chars);
-                reader.close();
                 return new String(chars);
             } catch (IOException e) {
                 e.printStackTrace();
+            } finally {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         } else {
             return "";
@@ -307,7 +320,7 @@ public class OfflineSubreddit {
         }
     }
 
-    int        savedIndex;
+    int savedIndex;
     Submission savedSubmission;
 
     public void hide(int index) {

@@ -16,7 +16,7 @@ public class SecretConstants {
 
     public static String getBase64EncodedPublicKey(Context context) {
         if (base64EncodedPublicKey == null) {
-            InputStream input;
+            InputStream input = null;
             try {
                 input = context.getAssets().open("secretconstants.properties");
                 Properties properties = new Properties();
@@ -25,14 +25,21 @@ public class SecretConstants {
             } catch (IOException e) {
                 // file not found
                 base64EncodedPublicKey = "";
+            } finally {
+                try {
+                    input.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
         }
         return base64EncodedPublicKey;
     }
+
     public static String getApiKey(Context context) {
         if (apiKey == null) {
-            InputStream input;
+            InputStream input = null;
             try {
                 input = context.getAssets().open("secretconstants.properties");
                 Properties properties = new Properties();
@@ -41,14 +48,21 @@ public class SecretConstants {
             } catch (IOException e) {
                 // file not found
                 apiKey = "";
+            } finally {
+                try {
+                    input.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
         }
         return apiKey;
     }
+
     public static String getImgurApiKey(Context context) {
         if (apiKey == null) {
-            InputStream input;
+            InputStream input = null;
             try {
                 input = context.getAssets().open("secretconstants.properties");
                 Properties properties = new Properties();
@@ -57,6 +71,8 @@ public class SecretConstants {
             } catch (IOException e) {
                 // file not found
                 apiKey = "3P3GlZj91emshgWU6YuQL98Q9Zihp1c2vCSjsnOQLIchXPzDLh"; //Testing key, will not work in production
+            } finally {
+                input.close();
             }
 
         }

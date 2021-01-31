@@ -89,33 +89,33 @@ import static me.ccrama.redditslide.Activities.AlbumPager.readableFileSize;
  */
 public class MediaView extends FullScreenActivity
         implements FolderChooserDialogCreate.FolderCallback {
-    public static final String EXTRA_URL         = "url";
-    public static final String SUBREDDIT         = "sub";
-    public static final String ADAPTER_POSITION  = "adapter_position";
-    public static final String SUBMISSION_URL    = "submission";
+    public static final String EXTRA_URL = "url";
+    public static final String SUBREDDIT = "sub";
+    public static final String ADAPTER_POSITION = "adapter_position";
+    public static final String SUBMISSION_URL = "submission";
     public static final String EXTRA_DISPLAY_URL = "displayUrl";
-    public static final String EXTRA_LQ          = "lq";
-    public static final String EXTRA_SHARE_URL   = "urlShare";
+    public static final String EXTRA_LQ = "lq";
+    public static final String EXTRA_SHARE_URL = "urlShare";
 
-    public static String   fileLoc;
-    public        String   subreddit;
+    public static String fileLoc;
+    public String subreddit;
     public static Runnable doOnClick;
-    public static boolean  didLoadGif;
+    public static boolean didLoadGif;
 
-    public float   previous;
+    public float previous;
     public boolean hidden;
     public boolean imageShown;
-    public String  actuallyLoaded;
+    public String actuallyLoaded;
     public boolean isGif;
 
-    private NotificationManager        mNotifyManager;
+    private NotificationManager mNotifyManager;
     private NotificationCompat.Builder mBuilder;
-    private long                       stopPosition;
-    private GifUtils.AsyncLoadGif      gif;
-    private String                     contentUrl;
-    private ExoVideoView               videoView;
-    private Gson                       gson;
-    private String                     mashapeKey;
+    private long stopPosition;
+    private GifUtils.AsyncLoadGif gif;
+    private String contentUrl;
+    private ExoVideoView videoView;
+    private Gson gson;
+    private String mashapeKey;
 
     public static void animateIn(View l) {
         l.setVisibility(View.VISIBLE);
@@ -369,27 +369,35 @@ public class MediaView extends FullScreenActivity
                         URLConnection ucon = url.openConnection();
                         ucon.setReadTimeout(5000);
                         ucon.setConnectTimeout(10000);
-                        InputStream is = ucon.getInputStream();
-                        BufferedInputStream inStream = new BufferedInputStream(is, 1024 * 5);
-                        int length = ucon.getContentLength();
-                        f.createNewFile();
-                        FileOutputStream outStream = new FileOutputStream(f);
-                        byte[] buff = new byte[5 * 1024];
 
-                        int len;
-                        int last = 0;
-                        while ((len = inStream.read(buff)) != -1) {
-                            outStream.write(buff, 0, len);
-                            int percent = Math.round(100.0f * f.length() / length);
-                            if (percent > last) {
-                                last = percent;
-                                mBuilder.setProgress(length, (int) f.length(), false);
-                                mNotifyManager.notify(1, mBuilder.build());
+                        InputStream is = ucon.getInputStream();
+                        BufferedInputStream inStream = null;
+                        FileOutputStream outStream = null;
+                        try {
+                            inStream = new BufferedInputStream(is, 1024 * 5);
+                            int length = ucon.getContentLength();
+                            f.createNewFile();
+                            outStream = new FileOutputStream(f);
+                            byte[] buff = new byte[5 * 1024];
+
+                            int len;
+                            int last = 0;
+                            while ((len = inStream.read(buff)) != -1) {
+                                outStream.write(buff, 0, len);
+                                int percent = Math.round(100.0f * f.length() / length);
+                                if (percent > last) {
+                                    last = percent;
+                                    mBuilder.setProgress(length, (int) f.length(), false);
+                                    mNotifyManager.notify(1, mBuilder.build());
+                                }
                             }
+                        } catch (Exception e) {
+                            System.out.println(e);
+                        } finally {
+                            outStream.flush();
+                            outStream.close();
+                            inStream.close();
                         }
-                        outStream.flush();
-                        outStream.close();
-                        inStream.close();
                         MediaScannerConnection.scanFile(MediaView.this,
                                 new String[]{f.getAbsolutePath()}, null,
                                 new MediaScannerConnection.OnScanCompletedListener() {
@@ -456,26 +464,34 @@ public class MediaView extends FullScreenActivity
                         ucon.setReadTimeout(5000);
                         ucon.setConnectTimeout(10000);
                         InputStream is = ucon.getInputStream();
-                        BufferedInputStream inStream = new BufferedInputStream(is, 1024 * 5);
-                        int length = ucon.getContentLength();
-                        f.createNewFile();
-                        FileOutputStream outStream = new FileOutputStream(f);
-                        byte[] buff = new byte[5 * 1024];
 
-                        int len;
-                        int last = 0;
-                        while ((len = inStream.read(buff)) != -1) {
-                            outStream.write(buff, 0, len);
-                            int percent = Math.round(100.0f * f.length() / length);
-                            if (percent > last) {
-                                last = percent;
-                                mBuilder.setProgress(length, (int) f.length(), false);
-                                mNotifyManager.notify(1, mBuilder.build());
+                        BufferedInputStream inStream = null;
+                        FileOutputStream outStream = null;
+                        try {
+                             inStream = new BufferedInputStream(is, 1024 * 5);
+                            int length = ucon.getContentLength();
+                            f.createNewFile();
+                             outStream = new FileOutputStream(f);
+                            byte[] buff = new byte[5 * 1024];
+
+                            int len;
+                            int last = 0;
+                            while ((len = inStream.read(buff)) != -1) {
+                                outStream.write(buff, 0, len);
+                                int percent = Math.round(100.0f * f.length() / length);
+                                if (percent > last) {
+                                    last = percent;
+                                    mBuilder.setProgress(length, (int) f.length(), false);
+                                    mNotifyManager.notify(1, mBuilder.build());
+                                }
                             }
+                        } catch (Exception e) {
+                            System.out.println(e);
+                        } finally {
+                            outStream.flush();
+                            outStream.close();
+                            inStream.close();
                         }
-                        outStream.flush();
-                        outStream.close();
-                        inStream.close();
                         MediaScannerConnection.scanFile(MediaView.this,
                                 new String[]{f.getAbsolutePath()}, null,
                                 new MediaScannerConnection.OnScanCompletedListener() {
@@ -635,7 +651,7 @@ public class MediaView extends FullScreenActivity
         final String firstUrl = getIntent().getExtras().getString(EXTRA_DISPLAY_URL, "");
         contentUrl = getIntent().getExtras().getString(EXTRA_URL);
 
-        if(contentUrl == null || contentUrl.isEmpty()){
+        if (contentUrl == null || contentUrl.isEmpty()) {
             finish();
             return;
         }
@@ -1198,14 +1214,14 @@ public class MediaView extends FullScreenActivity
 
                                     @Override
                                     public void onLoadingFailed(String imageUri, View view,
-                                            FailReason failReason) {
+                                                                FailReason failReason) {
                                         Log.v(LogUtil.getTag(), "LOADING FAILED");
                                         imageShown = false;
                                     }
 
                                     @Override
                                     public void onLoadingComplete(String imageUri, View view,
-                                            Bitmap loadedImage) {
+                                                                  Bitmap loadedImage) {
                                         imageShown = true;
                                         size.setVisibility(View.GONE);
 
@@ -1291,7 +1307,7 @@ public class MediaView extends FullScreenActivity
                                 }, new ImageLoadingProgressListener() {
                                     @Override
                                     public void onProgressUpdate(String imageUri, View view,
-                                            int current, int total) {
+                                                                 int current, int total) {
                                         size.setText(readableFileSize(total));
 
                                         ((ProgressBar) findViewById(R.id.progress)).setProgress(
