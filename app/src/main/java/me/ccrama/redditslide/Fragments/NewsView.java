@@ -83,7 +83,7 @@ public class NewsView extends Fragment implements SubmissionDisplay {
         );
 
         header = getActivity().findViewById(R.id.header);
-
+nk=
         //TODO, have it so that if the user clicks anywhere in the rv to hide and cancel GoToSubreddit?
 //        final TextInputEditText GO_TO_SUB_FIELD = (TextInputEditText) getActivity().findViewById(R.id.toolbar_search);
 //        final Toolbar TOOLBAR = ((Toolbar) getActivity().findViewById(R.id.toolbar));
