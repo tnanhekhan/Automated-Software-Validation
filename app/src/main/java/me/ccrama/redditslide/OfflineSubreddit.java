@@ -60,21 +60,21 @@ public class OfflineSubreddit {
     }
 
     public static void writeSubmissionToStorage(Submission s, JsonNode node, Context c) {
-        File toStore = new File(getCacheDirectory(c) + File.separator + s.getFullName());
         FileWriter writer = null;
-
         try {
-            writer = new FileWriter(toStore);
-            writer.append(node.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
             try {
-                writer.flush();
-                writer.close();
+                File toStore = new File(getCacheDirectory(c) + File.separator + s.getFullName());
+
+                writer = new FileWriter(toStore);
+                writer.append(node.toString());
             } catch (IOException e) {
                 e.printStackTrace();
+            } finally {
+                writer.flush();
+                writer.close();
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -231,13 +231,9 @@ public class OfflineSubreddit {
                 for (String s : split) {
                     if (!s.contains("_")) s = "t3_" + s;
                     if (!s.isEmpty()) {
-                        try {
-                            Submission sub = getSubmissionFromStorage(s, c, offline, reader);
-                            if (sub != null) {
-                                o.submissions.add(sub);
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                        Submission sub = getSubmissionFromStorage(s, c, offline, reader);
+                        if (sub != null) {
+                            o.submissions.add(sub);
                         }
                     }
 
@@ -257,13 +253,26 @@ public class OfflineSubreddit {
         String gotten = getStringFromFile(fullName, c);
         if (!gotten.isEmpty()) {
             if (gotten.startsWith("[") && offline) {
-                return (SubmissionSerializer.withComments(reader.readTree(gotten),
-                        CommentSort.CONFIDENCE));
+                try {
+                    return (SubmissionSerializer.withComments(reader.readTree(gotten),
+                            CommentSort.CONFIDENCE));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             } else if (gotten.startsWith("[")) {
-                JsonNode elem = reader.readTree(gotten);
+                JsonNode elem = null;
+                try {
+                    elem = reader.readTree(gotten);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 return (new Submission(elem.get(0).get("data").get("children").get(0).get("data")));
             } else {
-                return (new Submission(reader.readTree(gotten)));
+                try {
+                    return (new Submission(reader.readTree(gotten)));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
         return null;

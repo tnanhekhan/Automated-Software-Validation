@@ -57,9 +57,9 @@ import me.ccrama.redditslide.util.LogUtil;
 public class SettingsBackup extends BaseActivityAnim
         implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     MaterialDialog progress;
-    DriveFolder    appFolder;
-    String         title;
-    final private ResultCallback<DriveApi.MetadataBufferResult> newCallback  =
+    DriveFolder appFolder;
+    String title;
+    final private ResultCallback<DriveApi.MetadataBufferResult> newCallback =
             new ResultCallback<DriveApi.MetadataBufferResult>() {
                 @Override
                 public void onResult(DriveApi.MetadataBufferResult result) {
@@ -196,7 +196,7 @@ public class SettingsBackup extends BaseActivityAnim
                                                     new DialogInterface.OnClickListener() {
                                                         @Override
                                                         public void onClick(DialogInterface dialog,
-                                                                int which) {
+                                                                            int which) {
                                                             finish();
                                                         }
                                                     })
@@ -262,96 +262,113 @@ public class SettingsBackup extends BaseActivityAnim
                 Log.v(LogUtil.getTag(), "WORKED! " + fileUri.toString());
 
                 StringWriter fw = new StringWriter();
+
+                BufferedReader reader = null;
                 try {
-                    InputStream is = getContentResolver().openInputStream(fileUri);
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-                    int c = reader.read();
-                    while (c != -1) {
-                        fw.write(c);
-                        c = reader.read();
-                    }
-                    String read = fw.toString();
-                    if (read.contains("Slide_backupEND>")) {
-
-                        String[] files = read.split("END>");
-                        progress.dismiss();
-                        progress = new MaterialDialog.Builder(SettingsBackup.this).title(
-                                R.string.backup_restoring)
-                                .progress(false, files.length - 1)
-                                .cancelable(false)
-                                .build();
-                        progress.show();
-                        for (int i = 1; i < files.length; i++) {
-                            String innerFile = files[i];
-                            String t = innerFile.substring(6, innerFile.indexOf(">"));
-                            innerFile = innerFile.substring(innerFile.indexOf(">") + 1
-                            );
-
-                            File newF = new File(getApplicationInfo().dataDir
-                                    + File.separator
-                                    + "shared_prefs"
-                                    + File.separator
-                                    + t);
-                            Log.v(LogUtil.getTag(), "WRITING TO " + newF.getAbsolutePath());
-                            try {
-                                FileWriter newfw = new FileWriter(newF);
-                                BufferedWriter bw = new BufferedWriter(newfw);
-                                bw.write(innerFile);
-                                bw.close();
-                                progress.setProgress(progress.getCurrentProgress() + 1);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-
+                    try {
+                        InputStream is = getContentResolver().openInputStream(fileUri);
+                        reader = new BufferedReader(new InputStreamReader(is));
+                        int c = reader.read();
+                        while (c != -1) {
+                            fw.write(c);
+                            c = reader.read();
                         }
-                        new AlertDialogWrapper.Builder(SettingsBackup.this)
-                                .setCancelable(false)
-                                .setTitle(R.string.backup_restore_settings)
-                                .setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                    @Override
-                                    public void onDismiss(DialogInterface dialog) {
-                                        ProcessPhoenix.triggerRebirth(SettingsBackup.this);
+                        String read = fw.toString();
+                        if (read.contains("Slide_backupEND>")) {
 
+                            String[] files = read.split("END>");
+                            progress.dismiss();
+                            progress = new MaterialDialog.Builder(SettingsBackup.this).title(
+                                    R.string.backup_restoring)
+                                    .progress(false, files.length - 1)
+                                    .cancelable(false)
+                                    .build();
+                            progress.show();
+                            for (int i = 1; i < files.length; i++) {
+                                String innerFile = files[i];
+                                String t = innerFile.substring(6, innerFile.indexOf(">"));
+                                innerFile = innerFile.substring(innerFile.indexOf(">") + 1
+                                );
+
+                                File newF = new File(getApplicationInfo().dataDir
+                                        + File.separator
+                                        + "shared_prefs"
+                                        + File.separator
+                                        + t);
+                                Log.v(LogUtil.getTag(), "WRITING TO " + newF.getAbsolutePath());
+                                FileWriter newfw = null;
+                                try {
+                                    BufferedWriter bw = null;
+                                    try {
+                                        newfw = new FileWriter(newF);
+                                        bw = new BufferedWriter(newfw);
+                                        bw.write(innerFile);
+                                        progress.setProgress(progress.getCurrentProgress() + 1);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    } finally {
+                                        bw.close();
                                     }
-                                })
-                                .setMessage(R.string.backup_restarting)
-                                .setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                    @Override
-                                    public void onDismiss(DialogInterface dialog) {
-                                        ProcessPhoenix.triggerRebirth(SettingsBackup.this);
-                                    }
-                                })
-                                .setPositiveButton(R.string.btn_ok,
-                                        new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                ProcessPhoenix.triggerRebirth(SettingsBackup.this);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                } finally {
+                                    newfw.close();
+                                }
 
-                                            }
-                                        })
-                                .setCancelable(false)
-                                .show();
+                            }
+                            new AlertDialogWrapper.Builder(SettingsBackup.this)
+                                    .setCancelable(false)
+                                    .setTitle(R.string.backup_restore_settings)
+                                    .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                        @Override
+                                        public void onDismiss(DialogInterface dialog) {
+                                            ProcessPhoenix.triggerRebirth(SettingsBackup.this);
 
-                    } else {
+                                        }
+                                    })
+                                    .setMessage(R.string.backup_restarting)
+                                    .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                        @Override
+                                        public void onDismiss(DialogInterface dialog) {
+                                            ProcessPhoenix.triggerRebirth(SettingsBackup.this);
+                                        }
+                                    })
+                                    .setPositiveButton(R.string.btn_ok,
+                                            new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    ProcessPhoenix.triggerRebirth(SettingsBackup.this);
+
+                                                }
+                                            })
+                                    .setCancelable(false)
+                                    .show();
+
+                        } else {
+                            progress.hide();
+                            new AlertDialogWrapper.Builder(SettingsBackup.this).setTitle(
+                                    getString(R.string.err_not_valid_backup))
+                                    .setMessage(getString(
+                                            R.string.err_not_valid_backup_msg))
+                                    .setPositiveButton(R.string.btn_ok, null)
+                                    .setCancelable(false)
+                                    .show();
+                        }
+                    } catch (Exception e) {
                         progress.hide();
+                        e.printStackTrace();
                         new AlertDialogWrapper.Builder(SettingsBackup.this).setTitle(
-                                getString(R.string.err_not_valid_backup))
+                                getString(R.string.err_file_not_found))
                                 .setMessage(getString(
-                                        R.string.err_not_valid_backup_msg))
+                                        R.string.err_file_not_found_msg))
                                 .setPositiveButton(R.string.btn_ok, null)
                                 .setCancelable(false)
                                 .show();
+                    } finally {
+                        reader.close();
                     }
                 } catch (Exception e) {
-                    progress.hide();
                     e.printStackTrace();
-                    new AlertDialogWrapper.Builder(SettingsBackup.this).setTitle(
-                            getString(R.string.err_file_not_found))
-                            .setMessage(getString(
-                                    R.string.err_file_not_found_msg))
-                            .setPositiveButton(R.string.btn_ok, null)
-                            .setCancelable(false)
-                            .show();
                 }
             } else {
                 progress.dismiss();
@@ -363,7 +380,6 @@ public class SettingsBackup extends BaseActivityAnim
                         .setCancelable(false)
                         .show();
             }
-
         }
     }
 
@@ -402,7 +418,7 @@ public class SettingsBackup extends BaseActivityAnim
                                 .setPositiveButton(R.string.btn_ok,
                                         new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog,
-                                                    int whichButton) {
+                                                                int whichButton) {
                                                 File prefsdir = new File(getApplicationInfo().dataDir, "shared_prefs");
 
                                                 if (prefsdir.exists() && prefsdir.isDirectory()) {
@@ -436,7 +452,7 @@ public class SettingsBackup extends BaseActivityAnim
                                 .setPositiveButton(R.string.btn_ok,
                                         new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog,
-                                                    int whichButton) {
+                                                                int whichButton) {
 
                                             }
                                         })
@@ -462,7 +478,7 @@ public class SettingsBackup extends BaseActivityAnim
                                 .setPositiveButton(R.string.btn_ok,
                                         new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog,
-                                                    int whichButton) {
+                                                                int whichButton) {
                                                 progress = new MaterialDialog.Builder(SettingsBackup.this).title(
                                                         R.string.backup_restoring)
                                                         .content(R.string.misc_please_wait)
@@ -489,7 +505,7 @@ public class SettingsBackup extends BaseActivityAnim
                                 .setPositiveButton(R.string.btn_ok,
                                         new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog,
-                                                    int whichButton) {
+                                                                int whichButton) {
 
                                             }
                                         })
@@ -617,12 +633,12 @@ public class SettingsBackup extends BaseActivityAnim
                                     "albums") && !s.contains("STACKTRACE") && !s.contains(
                                     "com.google") && (!personal ||
                                     (!s.contains("SUBSNEW")
-                                    && !s.contains("appRestart")
-                                    && !s.contains("AUTH")
-                                    && !s.contains("TAGS")
-                                    && !s.contains("SEEN")
-                                    && !s.contains("HIDDEN")
-                                    && !s.contains("HIDDEN_POSTS")))) {
+                                            && !s.contains("appRestart")
+                                            && !s.contains("AUTH")
+                                            && !s.contains("TAGS")
+                                            && !s.contains("SEEN")
+                                            && !s.contains("HIDDEN")
+                                            && !s.contains("HIDDEN_POSTS")))) {
                                 FileReader fr = null;
                                 try {
                                     fr = new FileReader(new File(prefsdir + File.separator + s));
@@ -769,14 +785,26 @@ public class SettingsBackup extends BaseActivityAnim
                     + File.separator
                     + t);
             Log.v(LogUtil.getTag(), "WRITING TO " + newF.getAbsolutePath());
-
-
             try {
-                FileWriter fw = new FileWriter(newF);
-                BufferedWriter bw = new BufferedWriter(fw);
-                bw.write(contents);
-                bw.close();
-                progress.setProgress(progress.getCurrentProgress() + 1);
+                FileWriter fw = null;
+                try {
+                    fw = new FileWriter(newF);
+                    BufferedWriter bw = null;
+                    try {
+                        bw = new BufferedWriter(fw);
+                        bw.write(contents);
+                        progress.setProgress(progress.getCurrentProgress() + 1);
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } finally {
+                        bw.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    fw.close();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -375,27 +375,32 @@ public class MediaView extends FullScreenActivity
                         FileOutputStream outStream = null;
                         try {
                             inStream = new BufferedInputStream(is, 1024 * 5);
-                            int length = ucon.getContentLength();
-                            f.createNewFile();
-                            outStream = new FileOutputStream(f);
-                            byte[] buff = new byte[5 * 1024];
+                            try {
+                                outStream = new FileOutputStream(f);
+                                int length = ucon.getContentLength();
+                                f.createNewFile();
+                                byte[] buff = new byte[5 * 1024];
 
-                            int len;
-                            int last = 0;
-                            while ((len = inStream.read(buff)) != -1) {
-                                outStream.write(buff, 0, len);
-                                int percent = Math.round(100.0f * f.length() / length);
-                                if (percent > last) {
-                                    last = percent;
-                                    mBuilder.setProgress(length, (int) f.length(), false);
-                                    mNotifyManager.notify(1, mBuilder.build());
+                                int len;
+                                int last = 0;
+                                while ((len = inStream.read(buff)) != -1) {
+                                    outStream.write(buff, 0, len);
+                                    int percent = Math.round(100.0f * f.length() / length);
+                                    if (percent > last) {
+                                        last = percent;
+                                        mBuilder.setProgress(length, (int) f.length(), false);
+                                        mNotifyManager.notify(1, mBuilder.build());
+                                    }
                                 }
+                            } catch (Exception e) {
+                                System.out.println(e);
+                            } finally {
+                                outStream.flush();
+                                outStream.close();
                             }
                         } catch (Exception e) {
                             System.out.println(e);
                         } finally {
-                            outStream.flush();
-                            outStream.close();
                             inStream.close();
                         }
                         MediaScannerConnection.scanFile(MediaView.this,
@@ -468,28 +473,33 @@ public class MediaView extends FullScreenActivity
                         BufferedInputStream inStream = null;
                         FileOutputStream outStream = null;
                         try {
-                             inStream = new BufferedInputStream(is, 1024 * 5);
-                            int length = ucon.getContentLength();
-                            f.createNewFile();
-                             outStream = new FileOutputStream(f);
-                            byte[] buff = new byte[5 * 1024];
+                            inStream = new BufferedInputStream(is, 1024 * 5);
+                            try {
+                                outStream = new FileOutputStream(f);
+                                int length = ucon.getContentLength();
+                                f.createNewFile();
+                                byte[] buff = new byte[5 * 1024];
 
-                            int len;
-                            int last = 0;
-                            while ((len = inStream.read(buff)) != -1) {
-                                outStream.write(buff, 0, len);
-                                int percent = Math.round(100.0f * f.length() / length);
-                                if (percent > last) {
-                                    last = percent;
-                                    mBuilder.setProgress(length, (int) f.length(), false);
-                                    mNotifyManager.notify(1, mBuilder.build());
+                                int len;
+                                int last = 0;
+                                while ((len = inStream.read(buff)) != -1) {
+                                    outStream.write(buff, 0, len);
+                                    int percent = Math.round(100.0f * f.length() / length);
+                                    if (percent > last) {
+                                        last = percent;
+                                        mBuilder.setProgress(length, (int) f.length(), false);
+                                        mNotifyManager.notify(1, mBuilder.build());
+                                    }
                                 }
+                            } catch (Exception e) {
+                                System.out.println(e);
+                            } finally {
+                                outStream.flush();
+                                outStream.close();
                             }
                         } catch (Exception e) {
                             System.out.println(e);
                         } finally {
-                            outStream.flush();
-                            outStream.close();
                             inStream.close();
                         }
                         MediaScannerConnection.scanFile(MediaView.this,

@@ -72,7 +72,11 @@ public class SecretConstants {
                 // file not found
                 apiKey = "3P3GlZj91emshgWU6YuQL98Q9Zihp1c2vCSjsnOQLIchXPzDLh"; //Testing key, will not work in production
             } finally {
-                input.close();
+                try {
+                    input.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
         }

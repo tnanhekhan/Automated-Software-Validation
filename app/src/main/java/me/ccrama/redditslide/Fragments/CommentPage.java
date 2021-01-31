@@ -61,7 +61,6 @@ import net.dean.jraw.paginators.Sorting;
 import net.dean.jraw.paginators.TimePeriod;
 import net.dean.jraw.paginators.UserRecordPaginator;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -1804,13 +1803,9 @@ public class CommentPage extends Fragment implements Toolbar.OnMenuItemClickList
             }
         } else {
             Submission s = null;
-            try {
-                s = OfflineSubreddit.getSubmissionFromStorage(
-                        fullname.contains("_") ? fullname : "t3_" + fullname, getContext(),
-                        !NetworkUtil.isConnected(getActivity()), new ObjectMapper().reader());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            s = OfflineSubreddit.getSubmissionFromStorage(
+                    fullname.contains("_") ? fullname : "t3_" + fullname, getContext(),
+                    !NetworkUtil.isConnected(getActivity()), new ObjectMapper().reader());
             if (s != null && s.getComments() != null) {
                 doRefresh(false);
                 comments = new SubmissionComments(fullname, this, mSwipeRefreshLayout, s);
