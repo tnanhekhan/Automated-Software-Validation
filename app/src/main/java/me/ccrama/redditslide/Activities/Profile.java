@@ -118,7 +118,7 @@ public class Profile extends BaseActivityAnim {
 
     @Override
     public void onCreate(Bundle savedInstance) {
-        overrideSwipeFromAnywhere();
+        overrideSwipeFromAnywhereToTrue();
 
         super.onCreate(savedInstance);
 

@@ -59,7 +59,7 @@ public class Tumblr extends FullScreenActivity implements FolderChooserDialogCre
     private List<Photo> images;
     public static final String SUBREDDIT = "subreddit";
     private int    adapterPosition;
-    public  String subreddit;
+    public  String subredditExtra;
 
     @Override
     public void onFolderSelection(FolderChooserDialogCreate dialog, File folder, boolean isSaveToLocation) {
@@ -123,7 +123,7 @@ public class Tumblr extends FullScreenActivity implements FolderChooserDialogCre
             } else {
                 Intent i = new Intent(this, ImageDownloadNotificationService.class);
                 i.putExtra("actuallyLoaded", contentUrl);
-                if (subreddit != null && !subreddit.isEmpty()) i.putExtra("subreddit", subreddit);
+                if (subredditExtra != null && !subredditExtra.isEmpty()) i.putExtra("subreddit", subredditExtra);
                 startService(i);
             }
         } else {
@@ -219,7 +219,7 @@ public class Tumblr extends FullScreenActivity implements FolderChooserDialogCre
     public OverviewPagerAdapter album;
 
     public void onCreate(Bundle savedInstanceState) {
-        overrideSwipeFromAnywhere();
+        overrideSwipeFromAnywhereToTrue();
         super.onCreate(savedInstanceState);
         getTheme().applyStyle(
                 new ColorPreferences(this).getDarkThemeSubreddit(ColorPreferences.FONT_STYLE),
@@ -235,7 +235,7 @@ public class Tumblr extends FullScreenActivity implements FolderChooserDialogCre
         pager.setAdapter(album);
         pager.setCurrentItem(1);
         if(getIntent().hasExtra(SUBREDDIT)){
-            subreddit = getIntent().getStringExtra(SUBREDDIT);
+            subredditExtra = getIntent().getStringExtra(SUBREDDIT);
         }
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                                           @Override
@@ -374,7 +374,7 @@ public class Tumblr extends FullScreenActivity implements FolderChooserDialogCre
                     ((Tumblr) getActivity()).images = new ArrayList<>(jsonElements);
                     TumblrView adapter =
                             new TumblrView(baseActivity, ((Tumblr) getActivity()).images,
-                                    getActivity().findViewById(R.id.toolbar).getHeight(), ((Tumblr) getActivity()).subreddit);
+                                    getActivity().findViewById(R.id.toolbar).getHeight(), ((Tumblr) getActivity()).subredditExtra);
                     recyclerView.setAdapter(adapter);
                 }
             }

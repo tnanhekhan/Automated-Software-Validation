@@ -43,15 +43,15 @@ public class ContributionPostsSaved extends ContributionPosts {
                 // new submissions found
 
                 int start = 0;
-                if (posts != null) {
-                    start = posts.size() + 1;
+                if (contributionPosts != null) {
+                    start = contributionPosts.size() + 1;
                 }
 
-                if (reset || posts == null) {
-                    posts = submissions;
+                if (reset || contributionPosts == null) {
+                    contributionPosts = submissions;
                     start = -1;
                 } else {
-                    posts.addAll(submissions);
+                    contributionPosts.addAll(submissions);
                 }
 
                 final int finalStart = start;
@@ -61,7 +61,7 @@ public class ContributionPostsSaved extends ContributionPosts {
                 }
 
                 if (finalStart != -1) {
-                    adapter.notifyItemRangeInserted(finalStart + 1, posts.size());
+                    adapter.notifyItemRangeInserted(finalStart + 1, contributionPosts.size());
                 } else {
                     adapter.notifyDataSetChanged();
                 }

@@ -46,7 +46,7 @@ public class Wiki extends BaseActivityAnim implements WikiPage.WikiPageListener 
 
     @Override
     public void onCreate(Bundle savedInstance) {
-        overrideSwipeFromAnywhere();
+        overrideSwipeFromAnywhereToTrue();
 
         super.onCreate(savedInstance);
 

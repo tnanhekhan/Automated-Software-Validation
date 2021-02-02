@@ -45,7 +45,7 @@ public class Shadowbox extends FullScreenActivity implements SubmissionDisplay {
 
     @Override
     public void onCreate(Bundle savedInstance) {
-        overrideSwipeFromAnywhere();
+        overrideSwipeFromAnywhereToTrue();
 
         subreddit = getIntent().getExtras().getString(EXTRA_SUBREDDIT);
 

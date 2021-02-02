@@ -35,7 +35,7 @@ public class ReaderMode extends BaseActivityAnim {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        overrideSwipeFromAnywhere();
+        overrideSwipeFromAnywhereToTrue();
         super.onCreate(savedInstanceState);
         applyColorTheme("");
         setContentView(R.layout.activity_reader);

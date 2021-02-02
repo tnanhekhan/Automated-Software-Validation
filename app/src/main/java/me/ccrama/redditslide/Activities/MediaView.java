@@ -98,7 +98,7 @@ public class MediaView extends FullScreenActivity
     public static final String EXTRA_SHARE_URL = "urlShare";
 
     public static String fileLoc;
-    public String subreddit;
+    public String subredditExtra;
     public static Runnable doOnClick;
     public static boolean didLoadGif;
 
@@ -291,7 +291,7 @@ public class MediaView extends FullScreenActivity
                     }
                     break;
                     case (15): {
-                        new OpenVRedditTask(MediaView.this, subreddit).executeOnExecutor(
+                        new OpenVRedditTask(MediaView.this, subredditExtra).executeOnExecutor(
                                 AsyncTask.THREAD_POOL_EXECUTOR, contentUrl);
                     }
                     break;
@@ -323,7 +323,7 @@ public class MediaView extends FullScreenActivity
                 Intent i = new Intent(this, ImageDownloadNotificationService.class);
                 //always download the original file, or use the cached original if that is currently displayed
                 i.putExtra("actuallyLoaded", contentUrl);
-                if (subreddit != null && !subreddit.isEmpty()) i.putExtra("subreddit", subreddit);
+                if (subredditExtra != null && !subredditExtra.isEmpty()) i.putExtra("subreddit", subredditExtra);
                 startService(i);
             }
         } else {
@@ -636,7 +636,7 @@ public class MediaView extends FullScreenActivity
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        overrideRedditSwipeAnywhere();
+        overrideRedditSwipeAnywhereToTrue();
         super.onCreate(savedInstanceState);
         getTheme().applyStyle(new ColorPreferences(this).getDarkThemeSubreddit(""), true);
 
@@ -688,7 +688,7 @@ public class MediaView extends FullScreenActivity
             findViewById(R.id.comments).setVisibility(View.GONE);
         }
         if (getIntent().hasExtra(SUBREDDIT)) {
-            subreddit = getIntent().getExtras().getString(SUBREDDIT);
+            subredditExtra = getIntent().getExtras().getString(SUBREDDIT);
         }
         findViewById(R.id.mute).setVisibility(View.GONE);
 
@@ -802,7 +802,7 @@ public class MediaView extends FullScreenActivity
         findViewById(R.id.progress).setVisibility(View.GONE);
         gif = new GifUtils.AsyncLoadGif(this, videoView, loader,
                 findViewById(R.id.placeholder), doOnClick, true, true,
-                ((TextView) findViewById(R.id.size)), subreddit);
+                ((TextView) findViewById(R.id.size)), subredditExtra);
         videoView.attachMuteButton((ImageView) findViewById(R.id.mute));
         videoView.attachHqButton((ImageView) findViewById(R.id.hq));
         gif.execute(dat);
@@ -1391,7 +1391,7 @@ public class MediaView extends FullScreenActivity
                 //always download the original file, or use the cached original if that is currently displayed
                 i.putExtra("actuallyLoaded", contentUrl);
                 i.putExtra("saveToLocation", folder.getAbsolutePath());
-                if (subreddit != null && !subreddit.isEmpty()) i.putExtra("subreddit", subreddit);
+                if (subredditExtra != null && !subredditExtra.isEmpty()) i.putExtra("subreddit", subredditExtra);
                 startService(i);
             } else {
                 Reddit.appRestart.edit().putString("imagelocation", folder.getAbsolutePath()).apply();

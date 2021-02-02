@@ -425,7 +425,7 @@ public class MultiredditOverview extends BaseActivityAnim {
 
     @Override
     public void onCreate(Bundle savedInstance) {
-        overrideSwipeFromAnywhere();
+        overrideSwipeFromAnywhereToTrue();
 
         multiActivity = this;
 

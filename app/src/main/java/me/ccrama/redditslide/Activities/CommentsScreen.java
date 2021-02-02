@@ -146,7 +146,7 @@ public class CommentsScreen extends BaseActivityAnim implements SubmissionDispla
             super.onCreate(savedInstance);
             setContentView(R.layout.activity_slide_popup);
         } else {
-            overrideSwipeFromAnywhere();
+            overrideSwipeFromAnywhereToTrue();
             applyColorTheme();
             getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             getWindow().getDecorView().setBackground(null);

@@ -46,7 +46,7 @@ public class Draw extends BaseActivity implements ColorChooserDialog.ColorCallba
 
     @Override
     public void onCreate(Bundle savedInstance) {
-        overrideSwipeFromAnywhere();
+        overrideSwipeFromAnywhereToTrue();
         disableSwipeBackLayout();
         super.onCreate(savedInstance);
         applyColorTheme("");

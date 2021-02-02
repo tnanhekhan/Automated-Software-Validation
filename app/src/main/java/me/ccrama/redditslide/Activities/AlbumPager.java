@@ -147,10 +147,10 @@ public class AlbumPager extends FullScreenActivity
         }
     }
 
-    public String subreddit;
+    public String subredditExtra;
 
     public void onCreate(Bundle savedInstanceState) {
-        overrideSwipeFromAnywhere();
+        overrideSwipeFromAnywhereToTrue();
         super.onCreate(savedInstanceState);
         getTheme().applyStyle(
                 new ColorPreferences(this).getDarkThemeSubreddit(ColorPreferences.FONT_STYLE),
@@ -161,7 +161,7 @@ public class AlbumPager extends FullScreenActivity
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         if(getIntent().hasExtra(SUBREDDIT)){
-            this.subreddit = getIntent().getStringExtra(SUBREDDIT);
+            this.subredditExtra = getIntent().getStringExtra(SUBREDDIT);
         }
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -404,7 +404,7 @@ public class AlbumPager extends FullScreenActivity
                 public void run() {
 
                 }
-            }, false, true, rootView.findViewById(R.id.size), ((AlbumPager)getActivity()).subreddit).execute(url);
+            }, false, true, rootView.findViewById(R.id.size), ((AlbumPager)getActivity()).subredditExtra).execute(url);
             rootView.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -495,7 +495,7 @@ public class AlbumPager extends FullScreenActivity
             } else {
                 Intent i = new Intent(this, ImageDownloadNotificationService.class);
                 i.putExtra("actuallyLoaded", contentUrl);
-                if (subreddit != null && !subreddit.isEmpty()) i.putExtra("subreddit", subreddit);
+                if (subredditExtra != null && !subredditExtra.isEmpty()) i.putExtra("subreddit", subredditExtra);
                 i.putExtra("index", index);
                 startService(i);
             }

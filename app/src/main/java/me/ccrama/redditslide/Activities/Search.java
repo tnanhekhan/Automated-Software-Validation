@@ -213,7 +213,7 @@ public class Search extends BaseActivityAnim {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        overrideSwipeFromAnywhere();
+        overrideSwipeFromAnywhereToTrue();
         super.onCreate(savedInstanceState);
 
         applyColorTheme("");

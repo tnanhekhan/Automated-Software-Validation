@@ -108,7 +108,7 @@ public class LiveThread extends BaseActivityAnim {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        overrideSwipeFromAnywhere();
+        overrideSwipeFromAnywhereToTrue();
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         getWindow().getDecorView().setBackground(null);
         super.onCreate(savedInstanceState);

@@ -107,7 +107,7 @@ public class RedditGallery extends FullScreenActivity implements FolderChooserDi
             } else {
                 Intent i = new Intent(this, ImageDownloadNotificationService.class);
                 i.putExtra("actuallyLoaded", contentUrl);
-                if (subreddit != null && !subreddit.isEmpty()) i.putExtra("subreddit", subreddit);
+                if (subredditExtra != null && !subredditExtra.isEmpty()) i.putExtra("subreddit", subredditExtra);
                 startService(i);
             }
         } else {
@@ -154,7 +154,7 @@ public class RedditGallery extends FullScreenActivity implements FolderChooserDi
     }
 
     public String url;
-    public String subreddit;
+    public String subredditExtra;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -170,7 +170,7 @@ public class RedditGallery extends FullScreenActivity implements FolderChooserDi
     public OverviewPagerAdapter album;
 
     public void onCreate(Bundle savedInstanceState) {
-        overrideSwipeFromAnywhere();
+        overrideSwipeFromAnywhereToTrue();
         super.onCreate(savedInstanceState);
         getTheme().applyStyle(
                 new ColorPreferences(this).getDarkThemeSubreddit(ColorPreferences.FONT_STYLE),
@@ -181,7 +181,7 @@ public class RedditGallery extends FullScreenActivity implements FolderChooserDi
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         if(getIntent().hasExtra(SUBREDDIT)){
-            this.subreddit = getIntent().getExtras().getString(SUBREDDIT);
+            this.subredditExtra = getIntent().getExtras().getString(SUBREDDIT);
         }
 
         final ViewPager pager = (ViewPager) findViewById(R.id.images);
@@ -303,7 +303,7 @@ public class RedditGallery extends FullScreenActivity implements FolderChooserDi
                 public void run() {
                     rootView.findViewById(R.id.progress).setVisibility(View.GONE);
                     RedditGalleryView adapter = new RedditGalleryView(((RedditGallery) getActivity()), ((RedditGallery) getActivity()).images,
-                            rootView.findViewById(R.id.toolbar).getHeight(), ((RedditGallery) getActivity()).subreddit);
+                            rootView.findViewById(R.id.toolbar).getHeight(), ((RedditGallery) getActivity()).subredditExtra);
                     recyclerView.setAdapter(adapter);
                 }
             });

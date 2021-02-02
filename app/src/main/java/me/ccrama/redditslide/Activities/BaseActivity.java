@@ -229,7 +229,7 @@ public class BaseActivity extends PeekViewActivity
         enableSwipeBackLayout = false;
     }
 
-    protected void overrideSwipeFromAnywhere() {
+    protected void overrideSwipeFromAnywhereToTrue() {
         overrideSwipeFromAnywhere = true;
     }
 
@@ -237,7 +237,7 @@ public class BaseActivity extends PeekViewActivity
         verticalExit = true;
     }
 
-    protected void overrideRedditSwipeAnywhere() {
+    protected void overrideRedditSwipeAnywhereToTrue() {
         overrideRedditSwipeAnywhere = true;
     }
 

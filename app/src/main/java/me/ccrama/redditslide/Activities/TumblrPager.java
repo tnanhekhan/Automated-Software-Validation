@@ -151,7 +151,7 @@ public class TumblrPager extends FullScreenActivity
     }
 
     public void onCreate(Bundle savedInstanceState) {
-        overrideSwipeFromAnywhere();
+        overrideSwipeFromAnywhereToTrue();
         super.onCreate(savedInstanceState);
         getTheme().applyStyle(
                 new ColorPreferences(this).getDarkThemeSubreddit(ColorPreferences.FONT_STYLE),
@@ -167,7 +167,7 @@ public class TumblrPager extends FullScreenActivity
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         if(getIntent().hasExtra(SUBREDDIT)){
-            this.subreddit = getIntent().getStringExtra(SUBREDDIT);
+            this.subredditExtra = getIntent().getStringExtra(SUBREDDIT);
         }
 
         mToolbar.setPopupTheme(
@@ -271,7 +271,7 @@ public class TumblrPager extends FullScreenActivity
     ViewPager p;
 
     public List<Photo> images;
-    public String subreddit;
+    public String subredditExtra;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -383,7 +383,7 @@ public class TumblrPager extends FullScreenActivity
                 public void run() {
 
                 }
-            }, false, true, rootView.findViewById(R.id.size),  ((TumblrPager) getActivity()).subreddit).execute(url);
+            }, false, true, rootView.findViewById(R.id.size),  ((TumblrPager) getActivity()).subredditExtra).execute(url);
             rootView.findViewById(R.id.more).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -471,7 +471,7 @@ public class TumblrPager extends FullScreenActivity
             } else {
                 Intent i = new Intent(this, ImageDownloadNotificationService.class);
                 i.putExtra("actuallyLoaded", contentUrl);
-                if (subreddit != null && !subreddit.isEmpty()) i.putExtra("subreddit", subreddit);
+                if (subredditExtra != null && !subredditExtra.isEmpty()) i.putExtra("subreddit", subredditExtra);
                 i.putExtra("index", index);
                 startService(i);
             }

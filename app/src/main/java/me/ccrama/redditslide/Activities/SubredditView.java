@@ -158,7 +158,7 @@ public class SubredditView extends BaseActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        overrideSwipeFromAnywhere();
+        overrideSwipeFromAnywhereToTrue();
         if (SettingValues.commentPager && SettingValues.single) {
             disableSwipeBackLayout();
         }

@@ -80,7 +80,7 @@ public class Discover extends BaseActivityAnim {
 
     @Override
     public void onCreate(Bundle savedInstance) {
-        overrideSwipeFromAnywhere();
+        overrideSwipeFromAnywhereToTrue();
 
         super.onCreate(savedInstance);
 

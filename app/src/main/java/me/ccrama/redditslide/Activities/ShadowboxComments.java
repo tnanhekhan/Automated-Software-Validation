@@ -25,7 +25,7 @@ public class ShadowboxComments extends FullScreenActivity {
 
     @Override
     public void onCreate(Bundle savedInstance) {
-        overrideSwipeFromAnywhere();
+        overrideSwipeFromAnywhereToTrue();
 
         if(comments == null || comments.isEmpty()){
             finish();

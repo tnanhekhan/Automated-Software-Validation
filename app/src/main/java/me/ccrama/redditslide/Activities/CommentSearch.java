@@ -29,7 +29,7 @@ public class CommentSearch extends BaseActivityAnim {
 
     @Override
     public void onCreate(Bundle savedInstance) {
-        overrideRedditSwipeAnywhere();
+        overrideRedditSwipeAnywhereToTrue();
 
         super.onCreate(savedInstance);
         applyColorTheme();

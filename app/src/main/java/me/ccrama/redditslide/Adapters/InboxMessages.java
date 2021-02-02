@@ -21,7 +21,7 @@ import me.ccrama.redditslide.Authentication;
  * Created by ccrama on 9/17/2015.
  */
 public class InboxMessages extends GeneralPosts {
-    public ArrayList<Message> posts;
+    public ArrayList<Message> messagePosts;
     public boolean loading;
     private Paginator<Message> paginator;
     private SwipeRefreshLayout refreshLayout;
@@ -29,7 +29,7 @@ public class InboxMessages extends GeneralPosts {
     private InboxAdapter adapter;
 
     public InboxMessages(ArrayList<Message> firstData, InboxPaginator paginator) {
-        posts = firstData;
+        messagePosts = firstData;
         this.paginator = paginator;
     }
 
@@ -52,7 +52,7 @@ public class InboxMessages extends GeneralPosts {
     }
 
     public void addData(List<Message> data) {
-        posts.addAll(data);
+        messagePosts.addAll(data);
     }
 
     public class LoadData extends AsyncTask<String, Void, ArrayList<Message>> {
@@ -73,13 +73,13 @@ public class InboxMessages extends GeneralPosts {
                     nomore = true;
                 }
                 if (reset) {
-                    posts = subs;
+                    messagePosts = subs;
 
                 } else {
-                    if(posts == null){
-                        posts =new ArrayList<>();
+                    if(messagePosts == null){
+                        messagePosts =new ArrayList<>();
                     }
-                    posts.addAll(subs);
+                    messagePosts.addAll(subs);
                 }
                 ((Activity) adapter.mContext).runOnUiThread(new Runnable() {
                     @Override

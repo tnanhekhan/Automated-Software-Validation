@@ -101,18 +101,18 @@ public class InboxAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public int getItemViewType(int position) {
-        if (position == 0 && !dataSet.posts.isEmpty()
-                || position == dataSet.posts.size() + 1
+        if (position == 0 && !dataSet.messagePosts.isEmpty()
+                || position == dataSet.messagePosts.size() + 1
                 && dataSet.nomore
                 && !dataSet.where.equalsIgnoreCase("where")) {
             return SPACER;
         } else {
             position -= 1;
         }
-        if (position == dataSet.posts.size() && !dataSet.posts.isEmpty() && !dataSet.nomore) {
+        if (position == dataSet.messagePosts.size() && !dataSet.messagePosts.isEmpty() && !dataSet.nomore) {
             return 5;
         }
-        if (dataSet.posts.get(position).getSubject().toLowerCase(Locale.ENGLISH).contains("re:")
+        if (dataSet.messagePosts.get(position).getSubject().toLowerCase(Locale.ENGLISH).contains("re:")
                 && dataSet.where.equalsIgnoreCase("messages"))//IS COMMENT IN MESSAGES
         {
             return 2;
@@ -152,7 +152,7 @@ public class InboxAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 && !(viewHolder instanceof SpacerViewHolder)) {
             final MessageViewHolder messageViewHolder = (MessageViewHolder) viewHolder;
 
-            final Message comment = dataSet.posts.get(i);
+            final Message comment = dataSet.messagePosts.get(i);
             messageViewHolder.time.setText(
                     TimeUtils.getTimeAgo(comment.getCreated().getTime(), mContext));
 
@@ -552,10 +552,10 @@ public class InboxAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public int getItemCount() {
-        if (dataSet.posts == null || dataSet.posts.isEmpty()) {
+        if (dataSet.messagePosts == null || dataSet.messagePosts.isEmpty()) {
             return 0;
         } else {
-            return dataSet.posts.size() + 2;
+            return dataSet.messagePosts.size() + 2;
 
         }
     }

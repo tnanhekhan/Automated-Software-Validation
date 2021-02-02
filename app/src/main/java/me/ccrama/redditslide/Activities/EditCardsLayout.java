@@ -25,8 +25,8 @@ import me.ccrama.redditslide.Views.CreateCardView;
 public class EditCardsLayout extends BaseActivityAnim {
     @Override
     public void onCreate(Bundle savedInstance) {
-        overrideRedditSwipeAnywhere();
-        overrideSwipeFromAnywhere();
+        overrideRedditSwipeAnywhereToTrue();
+        overrideSwipeFromAnywhereToTrue();
 
         super.onCreate(savedInstance);
 
